@@ -1,0 +1,675 @@
+/* Padrão de listagem: fundo creme, destaque em madeira (paleta BRMusic) */
+.listagemPage {
+  background: var(--cream);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  min-height: calc(100vh - 8rem);
+  display: flex;
+  flex-direction: column;
+}
+
+.panel {
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.titulo {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e293b;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+}
+
+.bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  overflow: visible;
+}
+
+/* Segunda linha só quando o filtro não couber na barra (muitos campos, layout especial).
+   Padrão: filtros simples vão em ListagemBar children (barFiltroInline / barFiltroComLabel). */
+.filtroLinhaExtra {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  margin: -0.5rem 0 1rem;
+}
+
+.filtroLinhaExtra label {
+  font-size: 0.8125rem;
+  color: #475569;
+  font-weight: 500;
+}
+
+.filtroLinhaExtra select,
+.filtroLinhaExtra input[type='text'] {
+  min-width: 200px;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid #d0d0d0;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  min-height: 32px;
+  background: #fff;
+  color: #1e293b;
+}
+
+.filtroLinhaExtra select {
+  padding: 0.35rem 2rem 0.35rem 0.75rem;
+  cursor: pointer;
+}
+
+/**
+ * Campo de filtro extra na mesma linha da barra (após a busca, antes dos botões).
+ * Usar como children de ListagemBar.
+ */
+.barFiltroInline {
+  flex: 0 0 auto;
+  min-width: 120px;
+  max-width: 200px;
+}
+
+.barFiltroInline input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.35rem 0.6rem;
+  border: 1px solid #d0d0d0;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  color: #1e293b;
+  background: #fff;
+  min-height: 32px;
+}
+
+.barFiltroInline input::placeholder {
+  color: #94a3b8;
+}
+
+.barFiltroInline input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/**
+ * Label + select na mesma linha da ListagemBar (após a busca).
+ */
+.barFiltroComLabel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.5rem;
+  flex: 0 0 auto;
+  min-width: 0;
+}
+
+.barFiltroComLabel label {
+  font-size: 0.8125rem;
+  color: #475569;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.barFiltroComLabel select {
+  min-width: 160px;
+  max-width: 220px;
+  padding: 0.35rem 2rem 0.35rem 0.75rem;
+  border: 1px solid #d0d0d0;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  min-height: 32px;
+  background: #fff;
+  color: #1e293b;
+  cursor: pointer;
+}
+
+.barFiltroComLabel select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.searchWrap {
+  flex: 1;
+  min-width: 180px;
+  max-width: 320px;
+  position: relative;
+}
+
+.searchWrap input {
+  width: 100%;
+  padding: 0.35rem 2rem 0.35rem 0.6rem;
+  border: 1px solid #d0d0d0;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  color: #1e293b;
+  background: #fff;
+  min-height: 32px;
+}
+
+.searchWrap input::placeholder {
+  color: #94a3b8;
+}
+
+.searchWrap input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* Selects da barra de listagem: mesmo padrão do campo de busca (borda e foco) */
+.bar .barSelect {
+  padding: 0.35rem 2rem 0.35rem 0.75rem;
+  border: 1px solid #d0d0d0 !important;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  min-height: 32px;
+  min-width: 140px;
+  background: #fff !important;
+  color: #1e293b;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 0.5rem center !important;
+  background-size: 1rem !important;
+}
+
+.bar .barSelect:hover {
+  border-color: #9ca3af !important;
+}
+
+.bar .barSelect:focus {
+  outline: none;
+  border-color: var(--accent) !important;
+}
+
+.searchIcon {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #64748b;
+  pointer-events: none;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.btnFiltros,
+.btnCadastrar {
+  padding: 0.35rem 0.75rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--accent);
+  color: #fff;
+  transition: background 0.15s ease;
+}
+
+.btnFiltros:hover,
+.btnCadastrar:hover {
+  background: var(--accent-hover);
+}
+
+.btnLimpar {
+  padding: 0.35rem 0.75rem;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: #fff;
+  color: var(--accent);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.btnLimpar:hover {
+  background: var(--cream);
+  color: var(--accent-hover);
+}
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+.tableWrapScrollable {
+  max-height: min(60vh, 32rem);
+  overflow: auto;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+.tableWrapScrollable .table {
+  margin: 0;
+}
+
+.tableWrapScrollable .table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #f1f5f9;
+}
+
+.formAviso {
+  margin: 0.75rem 0 0;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  color: #0f766e;
+  background: #ccfbf1;
+  border: 1px solid #5eead4;
+  border-radius: 6px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.table thead tr {
+  background: #f1f5f9;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.table th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: #475569;
+}
+
+.table th:last-child {
+  text-align: right;
+}
+
+.table tbody tr {
+  background: #fff;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.table tbody tr:nth-child(even) {
+  background: #fafafa;
+}
+
+.table td {
+  padding: 0.75rem 1rem;
+  color: #334155;
+  overflow-wrap: anywhere;
+}
+
+.table td:last-child {
+  text-align: right;
+}
+
+.acoesCelula {
+  white-space: nowrap;
+}
+
+.cardsMobile {
+  display: none;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 0.9rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+}
+
+.cardCampo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.cardLabel {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+.cardValor {
+  font-size: 0.9375rem;
+  color: #1e293b;
+  overflow-wrap: anywhere;
+}
+
+.cardAcoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid #f1f5f9;
+}
+
+.cardAcoes .btnEditar,
+.cardAcoes .btnExcluir,
+.cardAcoes .btnAcaoExtra {
+  margin-left: 0;
+  min-height: 40px;
+}
+
+.btnEditar {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.65rem;
+  border: 1px solid var(--gold);
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  background: var(--cream);
+  color: var(--accent);
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.btnEditar:hover {
+  background: var(--cream-deep);
+  border-color: var(--gold-text);
+}
+
+.btnExcluir {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.65rem;
+  border: 1px solid #fca5a5;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  background: #fef2f2;
+  color: #dc2626;
+  margin-left: 0.35rem;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.btnExcluir:hover {
+  background: #fee2e2;
+  border-color: #f87171;
+}
+
+.btnAcaoExtra {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.65rem;
+  border: 1px solid #94a3b8;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  background: #f8fafc;
+  color: #475569;
+  margin-left: 0.35rem;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.btnAcaoExtra:hover {
+  background: #f1f5f9;
+  border-color: #64748b;
+}
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1rem 1.25rem;
+  border-top: 1px solid #e2e8f0;
+  background: #fafafa;
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.footerTotal {
+  font-weight: 500;
+  color: #475569;
+}
+
+.footerPageOf {
+  font-weight: 500;
+  color: #475569;
+}
+
+.footerControls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.paginationBtn {
+  min-width: 2rem;
+  height: 2rem;
+  padding: 0 0.5rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  background: #fff;
+  color: #475569;
+  font-size: 0.875rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.paginationBtn:hover:not(:disabled) {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.paginationBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.paginationCurrent {
+  min-width: 2rem;
+  height: 2rem;
+  padding: 0 0.5rem;
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.perPage {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: 0.75rem;
+  color: #64748b;
+}
+
+.perPage select {
+  padding: 0.35rem 0.5rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  background: #fff;
+  color: #475569;
+  font-size: 0.8125rem;
+  cursor: pointer;
+}
+
+.loading {
+  padding: 2rem;
+  text-align: center;
+  color: #64748b;
+  font-size: 0.875rem;
+}
+
+.empty {
+  padding: 2rem;
+  text-align: center;
+  color: #64748b;
+  font-size: 0.875rem;
+  background: #fff;
+  border-radius: 8px;
+  border: 1px dashed #e2e8f0;
+}
+
+.intro {
+  margin: 0 0 1rem;
+  color: var(--text-muted);
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+
+.switchTrack {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  border: none;
+  border-radius: 12px;
+  background: #cbd5e1;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  transition: background 0.2s ease;
+}
+
+.switchTrack:hover:not(:disabled) {
+  background: #94a3b8;
+}
+
+.switchTrack[data-checked='true'] {
+  background: var(--accent);
+}
+
+.switchTrack[data-checked='true']:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+
+.switchTrack:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.switchThumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+}
+
+.switchTrack[data-checked='true'] .switchThumb {
+  transform: translateX(20px);
+}
+
+@media (max-width: 767px) {
+  .listagemPage {
+    padding: 1rem 0.75rem;
+    margin-bottom: 1rem;
+    min-height: 0;
+  }
+
+  .titulo {
+    font-size: 1.05rem;
+    margin-bottom: 0.9rem;
+  }
+
+  .bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .searchWrap {
+    min-width: 0;
+    max-width: none;
+    width: 100%;
+    flex: 1 1 auto;
+  }
+
+  .actions {
+    width: 100%;
+  }
+
+  .btnFiltros,
+  .btnCadastrar,
+  .btnLimpar {
+    flex: 1 1 auto;
+    min-height: 44px;
+  }
+
+  .table {
+    display: none;
+  }
+
+  .cardsMobile {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0.75rem;
+  }
+
+  .footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .footerControls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.65rem;
+  }
+
+  .pagination {
+    justify-content: center;
+  }
+
+  .perPage {
+    margin-left: 0;
+    justify-content: space-between;
+  }
+
+  .filtroLinhaExtra select,
+  .filtroLinhaExtra input[type='text'],
+  .barFiltroInline input,
+  .barFiltroComLabel select,
+  .searchWrap input,
+  .bar .barSelect {
+    min-height: 44px;
+  }
+}

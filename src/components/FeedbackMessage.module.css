@@ -1,0 +1,69 @@
+.card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.icon {
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.body {
+  flex: 1;
+  min-width: 0;
+}
+
+.body p {
+  margin: 0;
+}
+
+.dismiss {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  margin: -0.25rem -0.25rem -0.25rem 0;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+  opacity: 0.7;
+  cursor: pointer;
+}
+
+.dismiss:hover {
+  opacity: 1;
+  background: rgba(15, 23, 42, 0.06);
+}
+
+.error {
+  color: #991b1b;
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
+.success {
+  color: var(--accent);
+  background: var(--cream);
+  border-color: var(--border);
+}
+
+.info {
+  color: #1e3a5f;
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+.warning {
+  color: #92400e;
+  background: #fffbeb;
+  border-color: #fde68a;
+}

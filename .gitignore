@@ -1,0 +1,10 @@
+.next/
+node_modules/
+.env
+config/projetoA-frontend.homolog.env
+config/projetoA-frontend.dev.env
+.env.*
+!.env.example
+*.log
+.idea/
+.vscode/

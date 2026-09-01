@@ -1,0 +1,574 @@
+﻿/* Header claro sobre o conteudo (sidebar madeira fica a esquerda) */
+.dashboardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 64px;
+  padding: 0 1.5rem;
+  background: #fffdf8;
+  color: var(--brown-text);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 15;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.headerMenuBtn,
+.headerIconBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  color: var(--wood);
+  cursor: pointer;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+
+.headerMenuBtn:hover,
+.headerIconBtn:hover {
+  background: var(--cream);
+  color: var(--wood-dark);
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.userMenu {
+  position: relative;
+}
+
+.userInfoBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0;
+  padding: 0.25rem 0.45rem 0.25rem 0.25rem;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+  color: inherit;
+}
+
+.userInfoBtn:hover {
+  background: var(--cream);
+}
+
+.userAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--wood);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.userLabels {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.userName {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--brown-text);
+  line-height: 1.2;
+}
+
+.userRole {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.2;
+}
+
+.userChevron {
+  color: var(--text-muted);
+}
+
+.userDropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.4rem);
+  min-width: 180px;
+  padding: 0.35rem;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(59, 36, 20, 0.12);
+  z-index: 20;
+}
+
+.userDropdownItem {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  width: 100%;
+  padding: 0.6rem 0.7rem;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--brown-text);
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+.userDropdownItem:hover {
+  background: var(--cream);
+}
+
+/* Shell: sidebar a esquerda em altura total + coluna (header + conteudo) */
+.shellLayout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.shellBody {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  position: relative;
+}
+
+.shellColumn {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  transition: margin-left 0.25s ease;
+}
+
+.dashboardMain {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: linear-gradient(165deg, #faf6ef 0%, #f3ece1 45%, #ebe4d6 100%);
+  padding: 1.5rem 1.75rem 2rem;
+  box-sizing: border-box;
+}
+
+.dashboardMainMusicoMobile {
+  padding: 1rem 1rem 5.75rem;
+}
+
+@media (max-width: 1023px) {
+  .dashboardMain:not(.dashboardMainMusicoMobile) {
+    padding: 1.15rem 1rem 1.5rem;
+  }
+
+  .userLabels {
+    display: none;
+  }
+}
+
+.sidebarOverlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 30;
+  transition: opacity 0.2s ease;
+}
+
+.sidebarOverlayVisible {
+  display: block;
+}
+
+@media (min-width: 1024px) {
+  .sidebarOverlayVisible {
+    display: none;
+  }
+}
+
+/* Sidebar madeira em altura total */
+.dashboardSidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 40;
+  width: 260px;
+  background-color: var(--wood);
+  background-image:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.04) 0 1px, transparent 1px 8px),
+    repeating-linear-gradient(180deg, rgba(0, 0, 0, 0.12) 0 1px, transparent 1px 5px),
+    linear-gradient(180deg, #6b4428 0%, #4a2c18 52%, #2e1a0e 100%);
+  border-right: 1px solid rgba(0, 0, 0, 0.18);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 1rem 0.7rem 0.85rem;
+  gap: 0.35rem;
+  transform: translateX(-100%);
+  transition: transform 0.25s ease, width 0.25s ease;
+  box-shadow: 8px 0 24px rgba(0, 0, 0, 0.18);
+}
+
+.dashboardSidebarOpen {
+  transform: translateX(0);
+}
+
+@media (min-width: 1024px) {
+  .dashboardSidebar {
+    transform: translateX(0);
+  }
+}
+
+.dashboardSidebarCollapsed {
+  width: 72px;
+  align-items: center;
+  overflow-x: visible;
+}
+
+.dashboardSidebarCollapsed .sidebarIconLink {
+  justify-content: center;
+  padding: 0.75rem;
+}
+
+.dashboardSidebarCollapsed .sidebarLabel,
+.dashboardSidebarCollapsed .sidebarBrandText,
+.dashboardSidebarCollapsed .sidebarGroupTitle {
+  display: none;
+}
+
+.sidebarBrand {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.35rem 0.55rem 0.85rem;
+  text-decoration: none;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.sidebarBrand:hover {
+  color: #fff;
+  opacity: 0.92;
+}
+
+.sidebarBrandIcon {
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--gold);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sidebarBrandText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.2;
+}
+
+.sidebarBrandText strong {
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.sidebarBrandText span {
+  font-size: 0.68rem;
+  color: rgba(255, 255, 255, 0.72);
+  font-weight: 500;
+}
+
+.sidebarNav {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  overflow-y: auto;
+}
+
+.sidebarGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  margin-top: 0.45rem;
+}
+
+.sidebarGroupTitle {
+  margin: 0;
+  padding: 0.55rem 0.85rem 0.25rem;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.48);
+}
+
+.sidebarCollapseFooter {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  margin-top: auto;
+  flex-shrink: 0;
+}
+
+.sidebarCollapseBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+  min-height: 44px;
+  padding: 0.7rem 0.85rem;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.sidebarCollapseBtn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.dashboardSidebarCollapsed .sidebarCollapseBtn {
+  justify-content: center;
+  padding: 0.75rem;
+}
+
+.sidebarIconLink {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.75rem;
+  width: 100%;
+  min-height: 42px;
+  padding: 0.55rem 0.85rem;
+  border-radius: 10px;
+  color: rgba(255, 255, 255, 0.84);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: background 0.15s ease, color 0.15s ease;
+  box-sizing: border-box;
+}
+
+.sidebarIcon {
+  flex-shrink: 0;
+  color: inherit;
+}
+
+.sidebarLabel {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebarIconLink:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.sidebarIconLinkActive {
+  background: #cbb18a;
+  color: #3b2414;
+}
+
+.sidebarIconLinkActive:hover {
+  background: #d4bc96;
+  color: #3b2414;
+}
+
+.logoMain {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--brown-text);
+  text-decoration: none;
+}
+
+.logoSub {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.headerBellWrap {
+  position: relative;
+  display: inline-flex;
+}
+
+.headerBellBadge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  background: #ef4444;
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 800;
+  line-height: 18px;
+  text-align: center;
+  pointer-events: none;
+}
+
+.equipamentoContexto {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-right: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
+  background: var(--cream);
+}
+
+.equipamentoContextoNome {
+  font-size: 0.8125rem;
+  color: var(--brown-text);
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.equipamentoContextoVoltar {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  background: var(--wood);
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* Pagina inicial - atalhos do musico */
+.welcomeTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--brown-text);
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.02em;
+}
+
+.welcomeSubtitle {
+  font-size: 1rem;
+  color: var(--text-muted);
+  margin: 0 0 2.5rem 0;
+  line-height: 1.5;
+}
+
+.sectionTitle {
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: var(--brown-text);
+  margin: 0 0 0.25rem 0;
+}
+
+.sectionSubtitle {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--brown-text);
+  margin: 0 0 1.25rem 0;
+}
+
+.cardsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 2.5rem;
+}
+
+@media (max-width: 412px) {
+  .cardsGrid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .accessCard {
+    min-height: 110px;
+    padding: 1rem 0.5rem;
+    font-size: 0.8125rem;
+  }
+
+  .welcomeTitle {
+    font-size: 1.5rem;
+  }
+}
+
+.accessCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1.5rem 1rem;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--brown-text);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-align: center;
+  min-height: 140px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+button.accessCard {
+  cursor: pointer;
+  font-family: inherit;
+  margin: 0;
+  appearance: none;
+}
+
+.accessCard:hover {
+  border-color: var(--accent);
+  box-shadow: 0 2px 8px rgba(92, 58, 34, 0.15);
+}
+
+.accessCardIcon {
+  color: var(--wood-mid);
+  flex-shrink: 0;
+}
+
+.accessCard:hover .accessCardIcon {
+  color: var(--accent);
+}
+
+.visualizarSection {
+  margin-top: 0.5rem;
+}

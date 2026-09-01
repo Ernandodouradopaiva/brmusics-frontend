@@ -1,0 +1,73 @@
+.modal {
+  max-width: 820px;
+}
+
+.header {
+  margin-bottom: 1.25rem;
+  padding-right: 2.75rem;
+}
+
+.title {
+  margin: 0 0 0.35rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
+.subtitle strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.fieldLabel {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.select {
+  width: 100%;
+  padding: 0.625rem 0.75rem;
+  font-size: 0.9375rem;
+  border: 1px solid var(--border, #d1d5db);
+  border-radius: 8px;
+  background: var(--surface, #fff);
+  color: var(--text);
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+}
+
+@media (max-width: 767px) {
+  .modal {
+    max-width: 100%;
+  }
+
+  .actions {
+    flex-direction: column-reverse;
+    gap: 0.65rem;
+  }
+
+  .actions :global(.modalBtnPrimary),
+  .actions :global(.modalBtnSecondary) {
+    width: 100%;
+  }
+}

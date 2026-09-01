@@ -1,0 +1,238 @@
+@import '@fontsource/kanit/latin-400.css';
+@import '@fontsource/kanit/latin-500.css';
+@import '@fontsource/kanit/latin-600.css';
+@import 'react-toastify/dist/ReactToastify.css';
+
+:root {
+  --wood: #4a2c18;
+  --wood-mid: #5c3a22;
+  --wood-dark: #3a2212;
+  --gold: #c4a574;
+  --gold-text: #8b5e34;
+  --cream: #f5f0e8;
+  --cream-deep: #ebe4d6;
+  --brown-text: #3b2414;
+  --bg: #f3ece1;
+  --bg-elevated: #fffdf8;
+  --sidebar: #4a2c18;
+  --text: #3b2414;
+  --text-muted: #7a6554;
+  --accent: #5c3a22;
+  --accent-hover: #3d2414;
+  --accent-soft: rgba(92, 58, 34, 0.12);
+  --border: #d9cfc0;
+  --border-subtle: #e8dfd2;
+  --danger: #dc2626;
+  --success: #6b4423;
+  --toastify-color-success: #6b4423;
+  --toastify-color-progress-success: #8b5e34;
+  --radius: 10px;
+  --radius-sm: 6px;
+  --shadow: 0 1px 3px rgba(59, 36, 20, 0.08);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  min-height: 100vh;
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Kanit', 'Segoe UI', system-ui, sans-serif;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover { color: var(--accent-hover); }
+
+button { cursor: pointer; font-family: inherit; }
+
+input, select, textarea { font-family: inherit; }
+
+input[type='text']:not([data-no-uppercase]):not([data-search-input]),
+textarea:not([data-no-uppercase]) {
+  text-transform: uppercase;
+}
+
+input[type='password'],
+input[data-search-input],
+input[data-no-uppercase] {
+  text-transform: none;
+}
+
+select {
+  background-color: #fff;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 2rem 0.5rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 0.5rem;
+}
+
+.modalContent {
+  position: relative;
+  background: #fff;
+  border-radius: 24px;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.12);
+  padding: 1.5rem 2rem;
+  width: 100%;
+  max-width: 580px;
+  max-height: calc(100vh - 3rem);
+  overflow: auto;
+}
+
+@media (max-width: 767px) {
+  .modalOverlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .modalContent {
+    padding: 1.15rem 1rem;
+    max-height: min(92vh, calc(100vh - 0.5rem));
+    max-width: 100%;
+    border-radius: 16px 16px 0 0;
+  }
+
+  .modalContent form .modalActions {
+    flex-direction: column-reverse;
+  }
+
+  .modalBtnPrimary,
+  .modalBtnSecondary {
+    width: 100%;
+  }
+}
+
+.modalGlobalCloseBtn {
+  position: absolute;
+  top: 0.85rem;
+  right: 0.9rem;
+  appearance: none;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(4px);
+  color: #0f172a;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.14);
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.15s ease,
+    box-shadow 0.2s ease;
+  z-index: 4;
+}
+
+.modalGlobalCloseBtn:hover:not(:disabled) {
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.2);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.18);
+}
+
+.modalGlobalCloseBtn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.modalGlobalCloseBtn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.modalGlobalCloseBtn:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 3px rgba(92, 58, 34, 0.25),
+    0 10px 24px rgba(15, 23, 42, 0.18);
+}
+
+.modalContent form .modalFormRow,
+form .modalFormRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 1rem;
+}
+
+.modalContent form .modalFormRow label,
+form .modalFormRow label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.modalContent form .modalFormRow input,
+form .modalFormRow input {
+  padding: 0.55rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 0.875rem;
+}
+
+.modalContent form .modalActions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.modalBtnSecondary {
+  min-height: 2.75rem;
+  padding: 0.625rem 1.5rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  color: #475569;
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.modalBtnPrimary {
+  min-height: 2.75rem;
+  padding: 0.625rem 1.5rem;
+  background: linear-gradient(180deg, var(--wood-mid) 0%, var(--wood-dark) 100%);
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(74, 44, 24, 0.35);
+}
+
+.modalBtnPrimary:disabled { opacity: 0.65; cursor: not-allowed; }
+
+.emptyState {
+  padding: 2rem;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.loadingState {
+  padding: 2rem;
+  text-align: center;
+  color: var(--text-muted);
+}

@@ -1,0 +1,11 @@
+.next
+node_modules
+.git
+.idea
+.vscode
+.env
+.env.*
+!.env.example
+config/*.env
+!config/*.env.example
+*.log

@@ -1,0 +1,187 @@
+/* Sobrescreve o grid global de .modalContent form (globals.css) */
+.modalSenha {
+  max-width: 680px;
+  width: calc(100% - 2rem);
+}
+
+:global(.modalContent).modalSenha form {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  overflow: visible;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  column-gap: 1.75rem;
+  row-gap: 1rem;
+  align-items: start;
+}
+
+.modalHeader {
+  margin-bottom: 1.25rem;
+  padding-right: 2.75rem;
+}
+
+.modalTitle {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.field {
+  margin-bottom: 0;
+  min-width: 0;
+}
+
+.field label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.35rem;
+}
+
+.inputWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 0.875rem;
+  top: 50%;
+  z-index: 1;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+/* Sobrescreve .modalContent input[type="text"] (uppercase + padding menor ao exibir senha) */
+:global(.modalContent).modalSenha input.input {
+  width: 100%;
+  padding: 0.625rem 2.75rem 0.625rem 2.75rem;
+  font-size: 0.9375rem;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  outline: none;
+  text-transform: none;
+  transition: border-color 0.15s ease;
+}
+
+.input {
+  width: 100%;
+  padding: 0.625rem 2.75rem 0.625rem 2.75rem;
+  font-size: 0.9375rem;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  outline: none;
+  text-transform: none;
+  transition: border-color 0.15s ease;
+}
+
+.input::placeholder {
+  color: var(--text-muted);
+}
+
+.input:focus {
+  border-color: var(--accent);
+}
+
+.eyeBtn {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  z-index: 1;
+  transform: translateY(-50%);
+  padding: 0.35rem;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.eyeBtn:hover {
+  color: var(--text);
+}
+
+.regras {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.regraOk,
+.regraFalha {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  line-height: 1.35;
+}
+
+.regraIcon {
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+
+.regraOk {
+  color: var(--success);
+}
+
+.regraFalha {
+  color: var(--danger);
+}
+
+.erro {
+  font-size: 0.875rem;
+  color: var(--danger);
+  background: #fef2f2;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  margin: 1rem 0 0 0;
+}
+
+.confirmarErro {
+  font-size: 0.8125rem;
+  color: var(--danger);
+  margin: 0.35rem 0 0 0;
+}
+
+.formActions {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-subtle);
+  width: 100%;
+}
+
+@media (max-width: 640px) {
+  .modalSenha {
+    max-width: 100%;
+  }
+
+  .formGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .regras {
+    margin-top: 0;
+  }
+}

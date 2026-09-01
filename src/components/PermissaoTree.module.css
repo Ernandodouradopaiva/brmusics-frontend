@@ -1,0 +1,347 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-height: 0;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.75rem 1rem;
+  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+}
+
+.searchWrap {
+  position: relative;
+  flex: 1 1 220px;
+  min-width: 180px;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 0.55rem 0.85rem 0.55rem 2.35rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  background: #fff;
+  color: #0f172a;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(92, 58, 34, 0.12);
+}
+
+.searchInput::placeholder {
+  color: #94a3b8;
+}
+
+.stats {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  font-size: 0.8125rem;
+  color: #64748b;
+  white-space: nowrap;
+}
+
+.stats strong {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.toolbarActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.toolbarSep {
+  color: #e2e8f0;
+  user-select: none;
+}
+
+.linkBtn {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--accent);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  padding: 0.35rem 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.linkBtn:hover:not(:disabled) {
+  background: rgba(92, 58, 34, 0.08);
+  color: var(--accent-hover);
+}
+
+.linkBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.treePanel {
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  background: #fff;
+  max-height: min(52vh, 480px);
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f8fafc;
+}
+
+.treePanel::-webkit-scrollbar {
+  width: 8px;
+}
+
+.treePanel::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 8px;
+}
+
+.groupBlock {
+  --tree-indent: 1.5rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.groupBlock:last-child {
+  border-bottom: none;
+}
+
+.groupBlock[data-depth='0'] > .groupHeader {
+  background: #f4f7f5;
+  border-bottom: 1px solid #e8efe9;
+}
+
+.groupBlock[data-depth='1'] > .groupHeader {
+  background: #fafbfc;
+}
+
+.groupHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1rem 0.65rem 1rem;
+  cursor: default;
+  transition: background 0.15s ease;
+}
+
+.groupHeader:hover {
+  background: #f1f5f9;
+}
+
+.groupBlock[data-depth='0'] > .groupHeader:hover {
+  background: #ecf2ee;
+}
+
+.expandBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.expandBtn:hover {
+  border-color: #cbd5e1;
+  color: #334155;
+  background: #f8fafc;
+}
+
+.groupBlock[data-depth='0'] .groupTitle {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: #0f172a;
+  text-transform: capitalize;
+}
+
+.groupBlock[data-depth='1'] .groupTitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1e293b;
+  text-transform: capitalize;
+}
+
+.groupTitle {
+  flex: 1;
+  min-width: 0;
+  letter-spacing: -0.01em;
+}
+
+.countBadge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748b;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.groupBody {
+  margin-left: var(--tree-indent);
+  padding: 0.2rem 0 0.45rem 0.875rem;
+  border-left: 2px solid #e2e8f0;
+}
+
+.groupBody .groupBody {
+  border-left-color: #d4e4d9;
+}
+
+.leafRow {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.35rem 1rem 0.35rem 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 400;
+  color: #475569;
+  margin-bottom: 0;
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+
+/* Folhas no nível do recurso: coluna alinhada ao checkbox do cabeçalho (sem botão expandir) */
+.groupBody .groupBody .leafRow {
+  padding-left: calc(1.75rem + 0.5rem);
+}
+
+.leafRow:hover {
+  background: #f8fafc;
+}
+
+.leafLabel {
+  line-height: 1.35;
+}
+
+/* Seletores compostos: evitam .modalContent input[type="checkbox"] { width: auto } do globals */
+.leafRow .check,
+.groupHeader .check {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  box-sizing: border-box;
+  width: 1.125rem;
+  min-width: 1.125rem;
+  height: 1.125rem;
+  margin: 0;
+  flex-shrink: 0;
+  border: 2px solid #cbd5e1;
+  border-radius: 5px;
+  background: #fff;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.leafRow .check:checked,
+.groupHeader .check:checked {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M3.5 8.5L6.5 11.5L12.5 4.5' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 12px 12px;
+}
+
+.leafRow .check:indeterminate,
+.groupHeader .check:indeterminate {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='4' y='7' width='8' height='2' rx='1' fill='white'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.leafRow .check:focus-visible,
+.groupHeader .check:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(92, 58, 34, 0.2);
+}
+
+.empty {
+  padding: 2rem 1rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #94a3b8;
+}
+
+.loading {
+  padding: 2rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+@media (max-width: 767px) {
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .searchWrap {
+    flex: 1 1 auto;
+    min-width: 0;
+    width: 100%;
+  }
+
+  .stats {
+    justify-content: center;
+  }
+
+  .toolbarActions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .treePanel {
+    max-height: min(42vh, 360px);
+  }
+
+  .groupBody {
+    margin-left: 0.65rem;
+    padding-left: 0.5rem;
+  }
+
+  .leafRow,
+  .groupHeader {
+    padding-right: 0.65rem;
+  }
+}

@@ -1,0 +1,389 @@
+.navMes {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.navBtn {
+  appearance: none;
+  border: 1px solid #d0d0d0;
+  background: #fff;
+  color: #1e293b;
+  border-radius: 999px;
+  min-height: 2.5rem;
+  padding: 0.35rem 0.85rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex: 1 1 0;
+  justify-content: center;
+}
+
+.navBtn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.mesAtual {
+  flex: 1.4 1 0;
+  text-align: center;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #1e293b;
+  line-height: 1.2;
+}
+
+.versao {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+}
+
+.btnPublicar {
+  width: calc(100% - 1.5rem);
+  margin: 0 0.75rem 0.85rem;
+  min-height: 2.75rem;
+  border: 0;
+  border-radius: 12px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.8125rem;
+  letter-spacing: 0.06em;
+}
+
+.btnPublicar:disabled {
+  opacity: 0.6;
+}
+
+.painelAlteracoes {
+  margin: 0 0.75rem 0.85rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--cream);
+}
+
+.alteracoesTitulo {
+  margin: 0 0 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.alteracaoGrupo {
+  margin: 0 0 0.75rem;
+}
+
+.alteracaoGrupo:last-of-type {
+  margin-bottom: 0.35rem;
+}
+
+.alteracaoMusico {
+  margin: 0 0 0.15rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.alteracaoResumo {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--accent);
+}
+
+.alteracoesJaComunicadas {
+  margin: 0.5rem 0 0;
+  font-size: 0.8rem;
+  color: #475569;
+}
+
+.btnComunicar {
+  width: 100%;
+  margin-top: 0.65rem;
+  min-height: 2.5rem;
+  border: 0;
+  border-radius: 10px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+}
+
+.btnComunicar:disabled {
+  opacity: 0.6;
+}
+
+.resumoPublicacao {
+  margin: 0 0 1rem;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.875rem;
+  color: #334155;
+}
+
+.diffs {
+  margin: 0 0 1rem;
+}
+
+.diffsTitulo {
+  margin: 0 0 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.diffs ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: 0.8rem;
+  color: #475569;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.agenda {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 0.75rem;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 1rem;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.85rem 1rem;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+}
+
+.cardCancelada {
+  opacity: 0.62;
+}
+
+.cardPublicada {
+  border-color: var(--gold);
+}
+
+.dataBloco {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 3.6rem;
+  padding: 0.45rem 0.5rem;
+  border-radius: 12px;
+  background: var(--accent);
+  color: #fff;
+  line-height: 1.05;
+}
+
+.dataDia {
+  font-size: 1.35rem;
+  font-weight: 800;
+}
+
+.dataMes {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.meta {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #475569;
+}
+
+.titulo {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.qtd {
+  margin: 0;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.equipe {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.equipe li {
+  font-size: 0.875rem;
+  color: #334155;
+}
+
+.acoes {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid #f1f5f9;
+}
+
+.alertas {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 0.55rem 0.7rem;
+  border-radius: 10px;
+  background: #fffbeb;
+  color: #92400e;
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  width: fit-content;
+}
+
+.badgeRascunho {
+  background: #e2e8f0;
+  color: #475569;
+}
+
+.badgePublicada {
+  background: var(--cream-deep);
+  color: var(--accent);
+}
+
+.badgePendente {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.badgeConfirmado {
+  background: var(--cream-deep);
+  color: var(--accent);
+}
+
+.badgeRecusado {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.linha {
+  display: grid;
+  gap: 0.45rem;
+  padding: 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: #f8fafc;
+}
+
+.linhaHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.avisoInstrumento {
+  margin: 0;
+  font-size: 0.75rem;
+  color: #b45309;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.campo label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.select,
+.input {
+  width: 100%;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: #0f172a;
+  background: #fff;
+  font-family: inherit;
+}
+
+.addBtn {
+  width: 100%;
+  border: 1px dashed var(--accent);
+  background: var(--cream);
+  color: var(--accent);
+  border-radius: 10px;
+  min-height: 2.5rem;
+  font-weight: 700;
+  font-size: 0.875rem;
+}
+
+.equipeForm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin: 0.75rem 0;
+}
+
+@media (min-width: 768px) {
+  .agenda {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 1rem;
+  }
+
+  .navBtn {
+    flex: 0 0 auto;
+    min-width: 8.5rem;
+  }
+
+  .mesAtual {
+    flex: 1 1 auto;
+    font-size: 1.35rem;
+  }
+}

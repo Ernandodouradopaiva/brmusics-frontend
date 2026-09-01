@@ -1,0 +1,52 @@
+/**
+ * Padrão de status em “pill”: fundo claro, borda e texto na mesma família de cor (ref. listagens / imagem guia).
+ */
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 9999px;
+  border: 1px solid;
+  line-height: 1.35;
+  white-space: nowrap;
+}
+
+/* Ativo / ATIVO — marrom (paleta BRMusic) */
+.badge[data-variant='ativo'] {
+  color: var(--accent);
+  background: var(--cream);
+  border-color: var(--accent);
+}
+
+/* Inativo */
+.badge[data-variant='inativo'] {
+  color: #7f1d1d;
+  background: #fef2f2;
+  border-color: #b91c1c;
+}
+
+/* Em obras */
+.badge[data-variant='em_obras'] {
+  color: #92400e;
+  background: #fffbeb;
+  border-color: #d97706;
+}
+
+/* Encerrado */
+.badge[data-variant='encerrado'] {
+  color: #7f1d1d;
+  background: #fef2f2;
+  border-color: #b91c1c;
+}
+
+/* Transferido (acolhimento) */
+.badge[data-variant='transferido'] {
+  color: #1e3a8a;
+  background: #eff6ff;
+  border-color: #2563eb;
+}
+
+.muted {
+  color: var(--muted, #64748b);
+}

@@ -1,0 +1,26 @@
+.searchRow {
+  display: flex;
+  gap: 1rem;
+}
+
+.searchRow input {
+  flex: 1;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+}
+
+@media (max-width: 767px) {
+  .actions {
+    flex-direction: column-reverse;
+  }
+
+  .actions :global(button) {
+    width: 100%;
+  }
+}

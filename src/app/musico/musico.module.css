@@ -1,0 +1,217 @@
+.saudacao {
+  margin: 0 0 1.25rem;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #1e293b;
+}
+
+.secaoTitulo {
+  margin: 1.25rem 0 0.65rem;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.cardDestaque {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.1rem 1.15rem;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+}
+
+.cardData {
+  margin: 0 0 0.2rem;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.cardMeta {
+  margin: 0 0 0.65rem;
+  font-size: 0.9rem;
+  color: #475569;
+}
+
+.cardTitulo {
+  margin: 0 0 0.85rem;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #1e293b;
+}
+
+.rotulo {
+  margin: 0 0 0.15rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.valor {
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.equipe {
+  margin: 0 0 1rem;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.equipe li {
+  font-size: 0.9rem;
+  color: #334155;
+}
+
+.btnRepertorio {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 2.75rem;
+  border: 0;
+  border-radius: 12px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.875rem;
+  letter-spacing: 0.03em;
+  text-decoration: none;
+}
+
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.cardLista {
+  display: block;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 0.9rem 1rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.cardListaTitulo {
+  margin: 0 0 0.2rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.cardListaMeta {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.vazio {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #64748b;
+}
+
+.repertorioLista {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.repertorioItem {
+  padding: 0.65rem 0.75rem;
+  border-radius: 10px;
+  background: #f8fafc;
+}
+
+.repertorioMomento {
+  margin: 0 0 0.15rem;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.repertorioTitulo {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.bottomNav {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: var(--bg-elevated);
+  border-top: 1px solid var(--border-subtle);
+  padding: 0.35rem 0.25rem calc(0.35rem + env(safe-area-inset-bottom));
+}
+
+.bottomNavLink {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  min-height: 44px;
+  max-width: 100%;
+  padding: 0.35rem 0.2rem;
+  text-decoration: none;
+  color: #64748b;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-align: center;
+  line-height: 1.15;
+  overflow: hidden;
+}
+
+@media (max-width: 360px) {
+  .saudacao {
+    font-size: 1.35rem;
+  }
+
+  .bottomNavLink {
+    font-size: 0.58rem;
+    padding: 0.3rem 0.08rem;
+    letter-spacing: 0;
+  }
+}
+
+.bottomNavLinkActive {
+  color: var(--accent);
+}
+
+.perfilLinha {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: 0.85rem;
+}
+
+.perfilAcoes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+}

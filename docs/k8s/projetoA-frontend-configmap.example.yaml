@@ -1,0 +1,16 @@
+# ConfigMap do projetoA-frontend (Kubernetes).
+# APP_URL é lida em runtime. Não dependa só de NEXT_PUBLIC_*.
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: projetoA-frontend-config
+  namespace: SEU_NAMESPACE
+data:
+  NODE_ENV: "production"
+  HOSTNAME: "0.0.0.0"
+  PORT: "3002"
+
+  PROJETO_A_API_INTERNAL_URL: "http://projeto-a-api:8081"
+  APP_URL: "https://SEU_DOMINIO_PROJETOA"
+  NEXT_PUBLIC_APP_URL: "https://SEU_DOMINIO_PROJETOA"
