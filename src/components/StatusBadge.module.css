@@ -12,7 +12,7 @@
   white-space: nowrap;
 }
 
-/* Ativo / ATIVO — marrom (paleta BRMusic) */
+/* Ativo / ATIVO — marrom (paleta BRMusics) */
 .badge[data-variant='ativo'] {
   color: var(--accent);
   background: var(--cream);

@@ -8,7 +8,7 @@ import { getApiErrorMessage } from '@/lib/apiError';
 import { onlyDigits, formatCpf } from '@/lib/masks';
 import styles from '../login.module.css';
 
-const LEMBRAR_CPF_KEY = 'brmusic.lembrarCpf';
+const LEMBRAR_CPF_KEY = 'brmusics.lembrarCpf';
 
 interface LoginCardProps {
   fontSizeLevel?: number;

@@ -13,8 +13,8 @@ export default function PublicHeader({ fontSize = 1, onFontSizeChange }: PublicH
     <header className={styles.topHeader} style={{ fontSize: `${fontSize}rem` }}>
       <span className={styles.headerLeft}>
         <Music size={20} strokeWidth={2} aria-hidden className={styles.headerNote} />
-        <span className={styles.headerBrandFull}>BRMusic | Sistema de Gestão para Músicos</span>
-        <span className={styles.headerBrandShort}>BRMusic</span>
+        <span className={styles.headerBrandFull}>BRMusics | Sistema de Gestão para Músicos</span>
+        <span className={styles.headerBrandShort}>BRMusics</span>
       </span>
       <div className={styles.headerRight}>
         <span className={styles.acessibilidade}>Acessibilidade</span>

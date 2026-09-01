@@ -1,7 +1,7 @@
 {
   "id": "/",
-  "name": "BRMusic",
-  "short_name": "BRMusic",
+  "name": "BRMusics",
+  "short_name": "BRMusics",
   "description": "Escalas, repertórios e comunicação dos músicos.",
   "start_url": "/home",
   "scope": "/",

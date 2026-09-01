@@ -64,7 +64,7 @@ export function PwaRegister() {
 
   return (
     <div className={styles.banner} role="status">
-      <p className={styles.texto}>Nova versão do BRMusic disponível.</p>
+      <p className={styles.texto}>Nova versão do BRMusics disponível.</p>
       <button
         type="button"
         className={styles.botao}

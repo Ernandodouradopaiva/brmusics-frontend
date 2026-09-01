@@ -11,13 +11,13 @@ const scriptFont = Great_Vibes({
 });
 
 export const metadata: Metadata = {
-  title: 'BRMusic',
+  title: 'BRMusics',
   description: 'Escalas, repertórios e comunicação dos músicos.',
-  applicationName: 'BRMusic',
+  applicationName: 'BRMusics',
   manifest: '/manifest.webmanifest',
   appleWebApp: {
     capable: true,
-    title: 'BRMusic',
+    title: 'BRMusics',
     statusBarStyle: 'default',
   },
   icons: {

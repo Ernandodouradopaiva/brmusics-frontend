@@ -23,7 +23,7 @@ export default function PublicBrandShell({
       <PublicHeader fontSize={fontSize} onFontSizeChange={onFontSizeChange} />
 
       <main className={styles.splitMain}>
-        <section className={styles.hero} aria-label="BRMusic">
+        <section className={styles.hero} aria-label="BRMusics">
           <Image
             src="/login-hero.png"
             alt=""
@@ -38,7 +38,7 @@ export default function PublicBrandShell({
             <div className={styles.heroNote} aria-hidden>
               <Music size={78} strokeWidth={1.4} />
             </div>
-            <h1 className={styles.heroTitle}>BRMusic</h1>
+            <h1 className={styles.heroTitle}>BRMusics</h1>
             <p className={styles.heroSubtitle}>Sistema de Gestão para Músicos</p>
             <span className={styles.heroCross} aria-hidden>
               <svg viewBox="0 0 24 32" width="16" height="22" fill="currentColor">

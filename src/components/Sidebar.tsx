@@ -200,12 +200,12 @@ export function Sidebar({ isOpen, onClose, collapsed, onToggleCollapse }: Sideba
         collapsed ? styles.dashboardSidebarCollapsed : ''
       }`}
     >
-      <Link href="/home" className={styles.sidebarBrand} onClick={onClose} title="BRMusic">
+      <Link href="/home" className={styles.sidebarBrand} onClick={onClose} title="BRMusics">
         <span className={styles.sidebarBrandIcon} aria-hidden>
           <Music2 size={22} strokeWidth={1.75} />
         </span>
         <span className={styles.sidebarBrandText}>
-          <strong>BRMusic</strong>
+          <strong>BRMusics</strong>
           <span>Sistema de Gestão para Músicos</span>
         </span>
       </Link>

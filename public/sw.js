@@ -1,5 +1,5 @@
-/* BRMusic PWA — cacheia somente estáticos. APIs autenticadas passam direto na rede. */
-const CACHE_VERSION = 'brmusic-static-v1';
+/* BRMusics PWA — cacheia somente estáticos. APIs autenticadas passam direto na rede. */
+const CACHE_VERSION = 'brmusics-static-v1';
 const OFFLINE_URL = '/offline.html';
 
 const PRECACHE = [
