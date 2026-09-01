@@ -3,7 +3,7 @@ function trimTrailingSlash(value: string): string {
 }
 
 const DEFAULT_LOCAL_API_URL = 'http://localhost:8081';
-const DEFAULT_PROD_API_URL = 'http://projeto-a-api:8081';
+const DEFAULT_PROD_API_URL = 'http://brmusic-api:8081';
 const DEFAULT_LOCAL_APP_URL = 'http://localhost:3002';
 
 function isLoopbackOrUnspecified(url: string): boolean {
@@ -45,7 +45,7 @@ export function getAppUrl(): string {
 }
 
 /**
- * URL interna do projetoA-api (somente servidor — proxy BFF).
+ * URL interna da brmusic-api (somente servidor — proxy BFF).
  * Precedência: PROJETO_A_API_INTERNAL_URL → vars do Service K8s → produção → local.
  */
 export function getProjetoAApiInternalUrl(): string {

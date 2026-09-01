@@ -1,11 +1,14 @@
 services:
-  projetoA-frontend:
+  brmusic-frontend:
     build: .
-    container_name: projetoA-frontend
-    network_mode: net_sps
+    container_name: brmusic-frontend
+    image: ernandopaiva/brmusic-frontend:1.0.0
     ports:
       - "3002:3002"
     restart: always
-    image: hub.sps.ce.gov.br/conecta/projetoa-frontend
     env_file:
-      - ./config/projetoA-frontend.prod.env
+      - ./config/
+    environment:
+      PORT: "3002"
+      PROJETO_A_API_INTERNAL_URL: http://brmusic-api:8081
+,
