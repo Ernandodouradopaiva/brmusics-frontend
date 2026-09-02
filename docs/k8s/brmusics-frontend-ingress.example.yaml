@@ -1,58 +1,58 @@
-# Ingress do Projeto A — roteamento correto
+# Ingress do BRMusics — roteamento correto
 #
 # IMPORTANTE:
-#   - Todo tráfego do host vai para projetoA-frontend.
-#   - projetoA-api permanece ClusterIP interno.
+#   - Todo tráfego do host vai para brmusics-frontend.
+#   - brmusics-api permanece ClusterIP interno.
 #
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: projetoa-ingress
-  namespace: conecta
+  name: brmusics-ingress
+  namespace: brmusics
   annotations:
     nginx.ingress.kubernetes.io/proxy-body-size: "10m"
 spec:
   ingressClassName: nginx
   rules:
-    - host: SEU_DOMINIO_PROJETOA
+    - host: SEU_DOMINIO_BRMUSICS
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: projetoa-frontend
+                name: brmusics-frontend
                 port:
                   number: 3002
   tls:
     - hosts:
-        - SEU_DOMINIO_PROJETOA
-      secretName: projetoa-tls
+        - SEU_DOMINIO_BRMUSICS
+      secretName: brmusics-tls
 
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: projetoa-frontend
-  namespace: conecta
+  name: brmusics-frontend
+  namespace: brmusics
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: projetoa-frontend
+      app: brmusics-frontend
   template:
     metadata:
       labels:
-        app: projetoa-frontend
+        app: brmusics-frontend
     spec:
       containers:
-        - name: projetoa-frontend
-          image: hub.sps.ce.gov.br/conecta/projetoA-frontend:latest
+        - name: brmusics-frontend
+          image: ernandopaiva/brmusics-frontend:latest
           ports:
             - containerPort: 3002
           envFrom:
             - configMapRef:
-                name: projetoA-frontend-config
+                name: brmusics-frontend-config
           readinessProbe:
             httpGet:
               path: /login
@@ -64,11 +64,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: projetoa-frontend
-  namespace: conecta
+  name: brmusics-frontend
+  namespace: brmusics
 spec:
   selector:
-    app: projetoa-frontend
+    app: brmusics-frontend
   ports:
     - port: 3002
       targetPort: 3002

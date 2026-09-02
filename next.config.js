@@ -26,7 +26,7 @@ function loadConfigEnv(relativePath, { override = false } = {}) {
 
 // Apenas dev local — arquivos config/*.env não entram na imagem Docker
 if (process.env.NODE_ENV !== 'production') {
-  loadConfigEnv('config/projetoA-frontend.dev.env');
+  loadConfigEnv('config/brmusics-frontend.dev.env');
 }
 
 const securityHeaders = [

@@ -78,7 +78,7 @@ export function UsuarioGruposModal({ open, usuario, onClose, onSaved }: UsuarioG
         <ModalCloseButton onClose={onClose} disabled={salvando} />
         <h2 className={styles.title}>Perfil do usuário</h2>
         <p className={styles.subtitle}>
-          <strong>{usuario.nome}</strong> — selecione o perfil (grupo) de permissões no Projeto A. Cada usuário
+          <strong>{usuario.nome}</strong> — selecione o perfil (grupo) de permissões no BRMusics. Cada usuário
           possui apenas um perfil.
         </p>
 

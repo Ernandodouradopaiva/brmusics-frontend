@@ -19,7 +19,7 @@ function ehRequisicaoSensivel(request, url) {
   if (request.headers.get('RSC') === '1') return true;
   if (request.headers.has('Next-Router-State-Tree')) return true;
   if (url.searchParams.has('_rsc')) return true;
-  if (url.pathname.startsWith('/projetoA-api')) return true;
+  if (url.pathname.startsWith('/brmusics-api')) return true;
   if (url.pathname.startsWith('/auth')) return true;
   if (url.pathname.startsWith('/_next/data')) return true;
   if (url.pathname.startsWith('/_next/image')) return true;

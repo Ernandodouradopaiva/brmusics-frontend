@@ -1,3 +1,4 @@
+# Imagem: brmusics-frontend (Next.js standalone)
 FROM node:20-slim AS builder
 
 WORKDIR /app
@@ -13,6 +14,9 @@ RUN npm run build
 FROM node:20-slim AS production
 
 WORKDIR /app
+
+LABEL org.opencontainers.image.title="brmusics-frontend"
+LABEL org.opencontainers.image.description="Interface web do BRMusics"
 
 ENV NODE_ENV=production
 ENV HOSTNAME=0.0.0.0

@@ -1,6 +1,6 @@
 import { getAppUrl } from '@/lib/env';
 
-export const API_PATH = '/projetoA-api';
+export const API_PATH = '/brmusics-api';
 
 export function getApiBaseURL(): string {
   if (typeof window !== 'undefined') {

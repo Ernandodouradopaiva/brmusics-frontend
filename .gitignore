@@ -1,8 +1,8 @@
 .next/
 node_modules/
 .env
-config/projetoA-frontend.homolog.env
-config/projetoA-frontend.dev.env
+config/brmusics-frontend.homolog.env
+config/brmusics-frontend.dev.env
 .env.*
 !.env.example
 *.log

@@ -1,14 +1,23 @@
 services:
-  brmusic-frontend:
-    build: .
-    container_name: brmusic-frontend
-    image: ernandopaiva/brmusic-frontend:1.0.0
+  brmusics-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ernandopaiva/brmusics-frontend:1.0.0
+    container_name: brmusics-frontend
+    hostname: brmusics-frontend
     ports:
       - "3002:3002"
     restart: always
     env_file:
-      - ./config/
+      - ./config/brmusics-frontend.prod.env
     environment:
       PORT: "3002"
-      PROJETO_A_API_INTERNAL_URL: http://brmusic-api:8081
-,
+      BRMUSICS_API_INTERNAL_URL: http://brmusics-api:8081
+    networks:
+      - brmusics-net
+
+networks:
+  brmusics-net:
+    name: brmusics-net
+    external: true

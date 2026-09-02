@@ -1,8 +1,8 @@
-# projetoA-frontend
+# brmusics-frontend
 
-Interface web do **Projeto A** — integrada ao **Conecta**. Login direto, fluxo Conecta via handoff e gestão administrativa.
+Interface web do **BRMusics** — escalas, repertórios e comunicação dos músicos.
 
-Pode rodar em **domínio próprio** ou ser acessado via **Conecta**.
+Login local (CPF/senha). Sessão via cookie HttpOnly `BRMUSICS_ACCESS_TOKEN`. Não há fluxo Conecta.
 
 ---
 
@@ -22,7 +22,7 @@ Build: **standalone** para Docker.
 ## Arquitetura BFF
 
 ```
-Browser → /projetoA-api/* → projetoA-frontend (proxy) → projetoA-api:8081
+Browser → /brmusics-api/* → brmusics-frontend (proxy) → brmusics-api:8081
 ```
 
 - Tokens em cookies **HttpOnly** (sem localStorage)
@@ -36,22 +36,16 @@ Browser → /projetoA-api/* → projetoA-frontend (proxy) → projetoA-api:8081
 | Variável | Descrição | Dev default |
 |----------|-----------|-------------|
 | `NEXT_PUBLIC_APP_URL` | URL pública do frontend | `http://localhost:3002` |
-| `PROJETO_A_API_INTERNAL_URL` | URL interna da API (servidor) | auto `localhost:8081` |
-| `CONECTA_INTERNAL_BASE_URL` | URL do Conecta para bootstrap | `https://conecta.sps.ce.gov.br/conecta-api` |
-| `CONECTA_SISTEMA_CODIGO` | Sigla no Conecta | `PROJETO_A` |
-| `CONECTA_CLIENT_SECRET` | Secret S2S do sistema no painel Conecta | (obrigatório) |
-| `CONECTA_BOOTSTRAP_OPTIONAL` | não falha a subida sem chave BFF | `true` |
+| `BRMUSICS_API_INTERNAL_URL` | URL interna da API (servidor) | auto `localhost:8081` |
 | `PORT` | Porta HTTP | `3002` |
-
-A chave BFF e metadados (`urlBase`, `issuer`, …) vêm do bootstrap Conecta na subida (`instrumentation.ts`) com `CONECTA_CLIENT_SECRET` — não configure a chave BFF manualmente em produção. `NEXT_PUBLIC_APP_URL` / `APP_URL` devem coincidir com `url_base` no painel Conecta.
 
 ### Resolução automática da API interna
 
 Ordem em `src/lib/env.ts`:
 
-1. `PROJETO_A_API_INTERNAL_URL` (override)
-2. `PROJETO_A_API_SERVICE_HOST/PORT` (Kubernetes)
-3. `http://projeto-a-api:8081` (produção)
+1. `BRMUSICS_API_INTERNAL_URL` (override)
+2. `BRMUSICS_API_SERVICE_HOST/PORT` (Kubernetes)
+3. `http://brmusics-api:8081` (produção)
 4. `http://localhost:8081` (dev)
 
 ---
@@ -59,43 +53,31 @@ Ordem em `src/lib/env.ts`:
 ## Desenvolvimento local
 
 ```bash
-cp config/projetoA-frontend.dev.env.example config/projetoA-frontend.dev.env
+cp config/brmusics-frontend.dev.env.example config/brmusics-frontend.dev.env
 # Edite CREDENCIAIS em config/*.dev.env
 
 npm install
 npm run dev
 ```
 
-Acesse `http://localhost:3002`. Requer `projetoA-api` na porta `8081`.
-
-### Integração Conecta (dev)
-
-Em desenvolvimento, as URLs do Conecta ficam no próprio `config/*-frontend.dev.env`, apontando para produção via o proxy BFF:
-
-`CONECTA_INTERNAL_BASE_URL=https://conecta.sps.ce.gov.br/conecta-api`
-
-Homologação usa `https://hconecta.sps.ce.gov.br/conecta-api`.
-
-Use o mesmo `CONECTA_CLIENT_SECRET` da API (secret em claro do sistema no painel Conecta).
-
+Acesse `http://localhost:3002`. Requer `brmusics-api` na porta `8081`.
 
 ---
 
-## Segurança (alinhada ao conecta-frontend)
+## Segurança
 
 - Proxy BFF com whitelist de rotas
 - Security headers (HSTS, X-Frame-Options, nosniff)
 - Erros 502 sem expor URL interna
-- Middleware com cookie `PROJETO_A_ACCESS_TOKEN`
+- Middleware com cookie `BRMUSICS_ACCESS_TOKEN`
 
 ---
 
-## Fluxo Conecta
+## Login
 
-1. Usuário autentica no Conecta
-2. Conecta redireciona para `/auth/conecta-complete?ticket=...`
-3. BFF chama `POST /auth/conecta/complete` na API com `X-Bff-Internal-Key`
-4. Cookies de sessão são definidos e usuário vai para `/home`
+1. Usuário informa CPF e senha em `/login`
+2. BFF chama `POST /auth/login` na API
+3. Cookie de sessão é definido e o usuário vai para `/home`
 
 ---
 
@@ -105,34 +87,28 @@ Use o mesmo `CONECTA_CLIENT_SECRET` da API (secret em claro do sistema no painel
 docker compose up -d
 ```
 
-Imagem: `hub.sps.ce.gov.br/conecta/projetoA-frontend`
+Imagem: `ernandopaiva/brmusics-frontend`
 
 ---
 
 ## Kubernetes
 
-Referência: `docs/k8s/projetoA-frontend-configmap.example.yaml`
+Referência: `docs/k8s/brmusics-frontend-configmap.example.yaml`
 
 ```yaml
-PROJETO_A_API_INTERNAL_URL: http://<nome-do-service>:8081
-NEXT_PUBLIC_APP_URL: https://SEU_DOMINIO_PROJETOA
-CONECTA_INTERNAL_BASE_URL: http://conecta-api:8080
-CONECTA_SISTEMA_CODIGO: PROJETO_A
+BRMUSICS_API_INTERNAL_URL: http://<nome-do-service>:8081
+NEXT_PUBLIC_APP_URL: https://SEU_DOMINIO_BRMUSICS
 ```
 
-A chave BFF é obtida do Conecta na subida — não inclua `PROJETO_A_BFF_INTERNAL_KEY` no ConfigMap.
-
-O Ingress deve enviar tráfego do domínio próprio (e `/projetoA-api/*`) para este frontend.
+O Ingress deve enviar tráfego do domínio próprio (e `/brmusics-api/*`) para este frontend.
 
 ---
 
-## Alinhamento com projetoA-api
+## Alinhamento com brmusics-api
 
-| Frontend | Backend / Conecta |
-|----------|-------------------|
-| `NEXT_PUBLIC_APP_URL` | `APP_CORS_ALLOWED_ORIGINS` (incluir) + `url_base` no cadastro Conecta |
-| `CONECTA_INTERNAL_BASE_URL` + `CONECTA_SISTEMA_CODIGO` + `CONECTA_CLIENT_SECRET` | Cadastro do sistema `PROJETO_A` no Conecta |
-| `PROJETO_A_API_INTERNAL_URL` | `APP_API_INTERNAL_URL` na API |
-| `CONECTA_INTERNAL_BASE_URL` | Service `conecta-api` no cluster |
+| Frontend | Backend |
+|----------|---------|
+| `NEXT_PUBLIC_APP_URL` | `APP_CORS_ALLOWED_ORIGINS` (incluir) |
+| `BRMUSICS_API_INTERNAL_URL` | `APP_API_INTERNAL_URL` na API |
 
-Consulte `projetoA-api/README.md` para configuração do backend.
+Consulte `brmusics-api/README.md` para configuração do backend.

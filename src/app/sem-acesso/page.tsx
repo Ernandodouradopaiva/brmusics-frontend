@@ -20,7 +20,7 @@ export default function SemAcessoPage() {
         )}
       </p>
       <p className={styles.welcomeSubtitle}>
-        Solicite ao administrador do Projeto A a vinculação a um grupo de permissões. Se você acabou de receber o
+        Solicite ao administrador do BRMusics a vinculação a um grupo de permissões. Se você acabou de receber o
         acesso, saia e entre novamente para atualizar a sessão.
       </p>
       <button type="button" className="modalBtnPrimary" onClick={() => logout()}>

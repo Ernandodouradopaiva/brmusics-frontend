@@ -3,7 +3,7 @@ function trimTrailingSlash(value: string): string {
 }
 
 const DEFAULT_LOCAL_API_URL = 'http://localhost:8081';
-const DEFAULT_PROD_API_URL = 'http://brmusic-api:8081';
+const DEFAULT_PROD_API_URL = 'http://brmusics-api:8081';
 const DEFAULT_LOCAL_APP_URL = 'http://localhost:3002';
 
 function isLoopbackOrUnspecified(url: string): boolean {
@@ -45,16 +45,16 @@ export function getAppUrl(): string {
 }
 
 /**
- * URL interna da brmusic-api (somente servidor — proxy BFF).
- * Precedência: PROJETO_A_API_INTERNAL_URL → vars do Service K8s → produção → local.
+ * URL interna da brmusics-api (somente servidor — proxy BFF).
+ * Precedência: BRMUSICS_API_INTERNAL_URL → vars do Service K8s → produção → local.
  */
-export function getProjetoAApiInternalUrl(): string {
-  const explicit = process.env.PROJETO_A_API_INTERNAL_URL?.trim();
+export function getBrmusicsApiInternalUrl(): string {
+  const explicit = process.env.BRMUSICS_API_INTERNAL_URL?.trim();
   if (explicit) return trimTrailingSlash(explicit);
 
-  const k8sHost = process.env.PROJETO_A_API_SERVICE_HOST?.trim();
+  const k8sHost = process.env.BRMUSICS_API_SERVICE_HOST?.trim();
   if (k8sHost) {
-    const port = process.env.PROJETO_A_API_SERVICE_PORT?.trim() || '8081';
+    const port = process.env.BRMUSICS_API_SERVICE_PORT?.trim() || '8081';
     return `http://${k8sHost}:${port}`;
   }
 

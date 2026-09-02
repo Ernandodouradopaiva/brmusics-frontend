@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getProjetoAApiInternalUrl } from '@/lib/env';
+import { getBrmusicsApiInternalUrl } from '@/lib/env';
 import { forwardProxyResponseHeaders } from '@/lib/proxyResponseHeaders';
 
 export const dynamic = 'force-dynamic';
@@ -44,7 +44,7 @@ function isAllowed(subPath: string): boolean {
 }
 
 async function proxy(req: NextRequest, segments: string[]) {
-  const backend = getProjetoAApiInternalUrl();
+  const backend = getBrmusicsApiInternalUrl();
 
   const sub = segments.length ? '/' + segments.join('/') : '';
   if (!isAllowed(sub)) {
@@ -78,9 +78,9 @@ async function proxy(req: NextRequest, segments: string[]) {
     return new NextResponse(res.body, { status: res.status, headers: forwardProxyResponseHeaders(res) });
   } catch (error) {
     const detail = error instanceof Error ? error.message : 'erro desconhecido';
-    console.error(`[projetoA-api proxy] falha ao conectar em ${url}: ${detail}`);
+    console.error(`[brmusics-api proxy] falha ao conectar: ${detail}`);
     return NextResponse.json(
-      { message: 'Não foi possível conectar ao projetoA-api' },
+      { message: 'Não foi possível conectar ao brmusics-api' },
       { status: 502 },
     );
   }

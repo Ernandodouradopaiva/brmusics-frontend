@@ -56,7 +56,7 @@ export const relatoriosService = {
     }
   },
 
-  /** Gera o PDF e abre no visualizador nativo em nova aba (padrão HubSocial/Conecta). */
+  /** Gera o PDF e abre no visualizador nativo em nova aba. */
   async abrirPdfUsuarios(params?: { busca?: string; ativo?: boolean }): Promise<void> {
     await openRelatorioPdfPopup('relatorio-usuarios.pdf', () => this.baixarUsuariosPdf(params));
   },
