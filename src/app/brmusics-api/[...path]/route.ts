@@ -30,7 +30,15 @@ const ALLOWED_ROUTE_PREFIXES = [
 
 const BLOCKED_PREFIXES = ['/actuator', '/swagger-ui', '/v3/api-docs', '/internal'];
 
-const STRIP_REQUEST = new Set(['host', 'connection']);
+const STRIP_REQUEST = new Set([
+  'host',
+  'connection',
+  // BFF → API é chamada servidor-a-servidor; não repassar CORS do navegador.
+  'origin',
+  'referer',
+  'access-control-request-method',
+  'access-control-request-headers',
+]);
 
 function shouldForwardBody(method: string): boolean {
   return method !== 'GET' && method !== 'HEAD' && method !== 'DELETE';
