@@ -14,15 +14,31 @@ export type ListarCelebracoesParams = {
 
 export const celebracoesService = {
   listar(params?: ListarCelebracoesParams) {
+    const { sort, ...rest } = params ?? {};
     return api.get<PageResponse<Celebracao>>('/celebracoes', {
       params: {
         size: 5,
         page: 0,
-        sort: 'data,desc',
-        ...params,
-        titulo: params?.titulo?.trim() || undefined,
-        localCodigo: params?.localCodigo || undefined,
-        status: params?.status || undefined,
+        ...rest,
+        titulo: rest.titulo?.trim() || undefined,
+        localCodigo: rest.localCodigo || undefined,
+        status: rest.status || undefined,
+        // Spring Data: sort=data,asc&sort=horaInicio,asc
+        sort: sort ? [sort, 'horaInicio,asc'] : ['data,asc', 'horaInicio,asc'],
+      },
+      paramsSerializer: {
+        serialize: (p) => {
+          const search = new URLSearchParams();
+          Object.entries(p).forEach(([key, value]) => {
+            if (value === undefined || value === null || value === '') return;
+            if (Array.isArray(value)) {
+              value.forEach((item) => search.append(key, String(item)));
+              return;
+            }
+            search.append(key, String(value));
+          });
+          return search.toString();
+        },
       },
     });
   },
@@ -37,5 +53,8 @@ export const celebracoesService = {
   },
   excluir(codigo: string) {
     return api.delete(`/celebracoes/${codigo}`);
+  },
+  replicarMes(codigo: string, ano: number, mes: number) {
+    return api.post<Celebracao>(`/celebracoes/${codigo}/replicar-mes`, { ano, mes });
   },
 };

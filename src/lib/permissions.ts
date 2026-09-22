@@ -3,6 +3,7 @@ import type { AuthModel } from '@/lib/auth/apiAuth';
 const HREF_MENU_PERMISSION: Record<string, string> = {
   '/home': 'inicio.menu',
   '/musicos': 'musico.menu',
+  '/frequencias': 'frequencia.menu',
   '/instrumentos': 'instrumento.menu',
   '/locais': 'local.menu',
   '/celebracoes': 'celebracao.menu',
@@ -120,6 +121,14 @@ export function podeGerarRelatorioUsuariosPdf(user: AuthModel | null | undefined
   return hasPermission(user, 'relatorio-usuarios.gerar');
 }
 
+export function podeVerRelatorio(user: AuthModel | null | undefined, recurso: string): boolean {
+  return hasPermission(user, `${recurso}.pagina`);
+}
+
+export function podeGerarRelatorio(user: AuthModel | null | undefined, recurso: string): boolean {
+  return hasPermission(user, `${recurso}.gerar`);
+}
+
 export function podeListarMusicos(user: AuthModel | null | undefined): boolean {
   return usuarioPodeListarRecurso(user, 'musico');
 }
@@ -130,6 +139,14 @@ export function podeAcessarPaginaMusicos(user: AuthModel | null | undefined): bo
 
 export function podeVerMenuMusicos(user: AuthModel | null | undefined): boolean {
   return hasPermission(user, 'musico.menu');
+}
+
+export function podeListarFrequencias(user: AuthModel | null | undefined): boolean {
+  return usuarioPodeListarRecurso(user, 'frequencia');
+}
+
+export function podeVerMenuFrequencias(user: AuthModel | null | undefined): boolean {
+  return hasPermission(user, 'frequencia.menu');
 }
 
 export function podeListarInstrumentos(user: AuthModel | null | undefined): boolean {

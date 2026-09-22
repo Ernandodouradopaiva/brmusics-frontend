@@ -4,6 +4,7 @@ import type { ElementType } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
+  ClipboardCheck,
   AudioLines,
   CalendarDays,
   ChevronLeft,
@@ -25,6 +26,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import {
   podeVerMenuCelebracoes,
   podeVerMenuEscalas,
+  podeVerMenuFrequencias,
   podeVerMenuInstrumentos,
   podeVerMenuLocais,
   podeVerMenuMeuRepertorio,
@@ -145,6 +147,12 @@ export function Sidebar({ isOpen, onClose, collapsed, onToggleCollapse }: Sideba
 
   const gestao: NavItem[] = [
     { href: '/musicos', label: 'Músicos', icon: Music, visible: podeVerMenuMusicos(user) },
+    {
+      href: '/frequencias',
+      label: 'Frequência',
+      icon: ClipboardCheck,
+      visible: podeVerMenuFrequencias(user),
+    },
     {
       href: '/instrumentos',
       label: 'Instrumentos / Funções',

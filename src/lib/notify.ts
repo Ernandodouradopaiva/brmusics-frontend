@@ -58,6 +58,14 @@ export const AppMessages = {
   celebracao: {
     salvo: (editando: boolean) =>
       editando ? 'Celebração atualizada com sucesso.' : 'Celebração cadastrada com sucesso.',
+    serieGerada: (qtd: number, competencia: string) =>
+      qtd === 1
+        ? `1 celebração fixa gerada para ${competencia}.`
+        : `${qtd} celebrações fixas geradas para ${competencia}.`,
+    mesReplicado: (qtd: number, competencia: string) =>
+      qtd === 1
+        ? `1 celebração replicada para ${competencia}.`
+        : `${qtd} celebrações replicadas para ${competencia}.`,
     excluido: 'Celebração excluída com sucesso.',
   },
   escala: {
@@ -68,11 +76,12 @@ export const AppMessages = {
     excluido: 'Equipe da escala removida. O histórico foi preservado.',
     publicada: (versao: number, competencia: string) =>
       `Escalas de ${competencia} publicadas (versão ${versao}).`,
+    publicadaIndividual: 'Escala publicada com sucesso.',
   },
   repertorio: {
     salvo: (editando: boolean) =>
       editando ? 'Repertório atualizado com sucesso.' : 'Repertório montado com sucesso.',
-    excluido: 'Músicas do repertório removidas. O histórico foi preservado.',
+    excluido: 'Repertório excluído com sucesso.',
   },
   musica: {
     salvo: (editando: boolean) =>
@@ -80,6 +89,10 @@ export const AppMessages = {
     ativoAtualizado: (ativo: boolean) =>
       ativo ? 'Música ativada com sucesso.' : 'Música inativada com sucesso.',
     excluido: 'Música excluída com sucesso.',
+    csvExportado: 'Arquivo CSV das músicas baixado com sucesso.',
+  },
+  frequencia: {
+    salva: 'Frequências do mês salvas com sucesso.',
   },
   whatsapp: {
     reenviado: 'Envio reencaminhado para a fila.',

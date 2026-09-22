@@ -42,6 +42,19 @@
   color: #1e293b;
 }
 
+.badgeStatus {
+  display: inline-block;
+  margin: -0.35rem 0 0.85rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #7c2d12;
+  background: #ffedd5;
+}
+
 .rotulo {
   margin: 0 0 0.15rem;
   font-size: 0.72rem;

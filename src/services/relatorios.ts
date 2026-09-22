@@ -43,21 +43,80 @@ async function assertPdfBlob(blob: Blob): Promise<Blob> {
   return blob.type === 'application/pdf' ? blob : new Blob([blob], { type: 'application/pdf' });
 }
 
+async function baixarPdf(
+  path: string,
+  params?: Record<string, string | number | boolean | undefined>,
+): Promise<Blob> {
+  try {
+    const response = await api.get<Blob>(path, {
+      params,
+      responseType: 'blob',
+    });
+    return await assertPdfBlob(response.data);
+  } catch (err) {
+    throw await normalizeApiError(err);
+  }
+}
+
+export type RelatorioPeriodoParams = {
+  ano?: number;
+  mes?: number;
+};
+
 export const relatoriosService = {
   async baixarUsuariosPdf(params?: { busca?: string; ativo?: boolean }): Promise<Blob> {
-    try {
-      const response = await api.get<Blob>('/relatorios/usuarios.pdf', {
-        params,
-        responseType: 'blob',
-      });
-      return await assertPdfBlob(response.data);
-    } catch (err) {
-      throw await normalizeApiError(err);
-    }
+    return baixarPdf('/relatorios/usuarios.pdf', params);
   },
-
-  /** Gera o PDF e abre no visualizador nativo em nova aba. */
   async abrirPdfUsuarios(params?: { busca?: string; ativo?: boolean }): Promise<void> {
     await openRelatorioPdfPopup('relatorio-usuarios.pdf', () => this.baixarUsuariosPdf(params));
+  },
+
+  baixarMusicasPdf() {
+    return baixarPdf('/relatorios/musicas.pdf');
+  },
+  abrirPdfMusicas() {
+    return openRelatorioPdfPopup('relatorio-musicas.pdf', () => this.baixarMusicasPdf());
+  },
+
+  baixarMusicosPdf() {
+    return baixarPdf('/relatorios/musicos.pdf');
+  },
+  abrirPdfMusicos() {
+    return openRelatorioPdfPopup('relatorio-musicos.pdf', () => this.baixarMusicosPdf());
+  },
+
+  baixarMusicosEscalaPdf(params?: RelatorioPeriodoParams) {
+    return baixarPdf('/relatorios/musicos-escala.pdf', params);
+  },
+  abrirPdfMusicosEscala(params?: RelatorioPeriodoParams) {
+    return openRelatorioPdfPopup('relatorio-musicos-escala.pdf', () => this.baixarMusicosEscalaPdf(params));
+  },
+
+  baixarEscalasPdf(params?: RelatorioPeriodoParams) {
+    return baixarPdf('/relatorios/escalas.pdf', params);
+  },
+  abrirPdfEscalas(params?: RelatorioPeriodoParams) {
+    return openRelatorioPdfPopup('relatorio-escalas.pdf', () => this.baixarEscalasPdf(params));
+  },
+
+  baixarRepertoriosPdf(params?: RelatorioPeriodoParams) {
+    return baixarPdf('/relatorios/repertorios.pdf', params);
+  },
+  abrirPdfRepertorios(params?: RelatorioPeriodoParams) {
+    return openRelatorioPdfPopup('relatorio-repertorios.pdf', () => this.baixarRepertoriosPdf(params));
+  },
+
+  baixarCelebracoesMesPdf(params?: RelatorioPeriodoParams) {
+    return baixarPdf('/relatorios/celebracoes-mes.pdf', params);
+  },
+  abrirPdfCelebracoesMes(params?: RelatorioPeriodoParams) {
+    return openRelatorioPdfPopup('relatorio-celebracoes-mes.pdf', () => this.baixarCelebracoesMesPdf(params));
+  },
+
+  baixarMusicosFuncoesPdf() {
+    return baixarPdf('/relatorios/musicos-funcoes.pdf');
+  },
+  abrirPdfMusicosFuncoes() {
+    return openRelatorioPdfPopup('relatorio-musicos-funcoes.pdf', () => this.baixarMusicosFuncoesPdf());
   },
 };

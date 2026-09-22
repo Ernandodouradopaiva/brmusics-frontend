@@ -9,6 +9,7 @@ type RotaRule = { prefix: string; permission: string };
 
 const ROTAS: RotaRule[] = [
   { prefix: '/musicos', permission: 'musico.pagina' },
+  { prefix: '/frequencias', permission: 'frequencia.pagina' },
   { prefix: '/instrumentos', permission: 'instrumento.pagina' },
   { prefix: '/locais', permission: 'local.pagina' },
   { prefix: '/celebracoes', permission: 'celebracao.pagina' },
@@ -58,6 +59,7 @@ export function rotaInicialParaUsuario(user: AuthModel | null | undefined): stri
   if (usuarioPodeAcessarPagina(user, 'inicio')) return '/home';
   if (usuarioPodeAcessarPagina(user, 'meu-repertorio')) return '/meu-repertorio';
   if (usuarioPodeAcessarPagina(user, 'musico')) return '/musicos';
+  if (usuarioPodeAcessarPagina(user, 'frequencia')) return '/frequencias';
   if (usuarioPodeAcessarPagina(user, 'instrumento')) return '/instrumentos';
   if (usuarioPodeAcessarPagina(user, 'local')) return '/locais';
   if (usuarioPodeAcessarPagina(user, 'celebracao')) return '/celebracoes';

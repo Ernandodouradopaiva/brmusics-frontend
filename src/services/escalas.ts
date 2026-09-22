@@ -17,6 +17,9 @@ export const escalasService = {
   publicar(ano: number, mes: number) {
     return api.post<EscalaPublicacao>('/escalas/publicacoes', { ano, mes });
   },
+  publicarUma(codigo: string) {
+    return api.post<Escala>(`/escalas/${codigo}/publicar`);
+  },
   buscar(codigo: string) {
     return api.get<Escala>(`/escalas/${codigo}`);
   },

@@ -12,6 +12,7 @@ const ALLOWED_ROUTE_PREFIXES = [
   '/usuarios',
   '/grupos',
   '/musicos',
+  '/frequencias',
   '/instrumentos',
   '/locais',
   '/celebracoes',

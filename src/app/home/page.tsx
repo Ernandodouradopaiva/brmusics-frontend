@@ -16,6 +16,7 @@ import dash from '@/app/dashboard/dashboard.module.css';
 import home from '@/app/home/home.module.css';
 import Link from 'next/link';
 import {
+  ClipboardCheck,
   Users,
   Shield,
   KeyRound,
@@ -96,7 +97,7 @@ export default function HomePage() {
               {agenda?.proxima ? (
                 <CardProximaEscala item={agenda.proxima} />
               ) : (
-                <p className={styles.vazio}>Nenhuma escala futura publicada para você.</p>
+                <p className={styles.vazio}>Nenhuma escala futura cadastrada para você.</p>
               )}
               <p className={styles.secaoTitulo}>Próximas escalas</p>
               {(agenda?.proximas ?? []).length > 0 ? (
@@ -134,6 +135,7 @@ export default function HomePage() {
       <PermissionGate
         anyOf={[
           'musico.pagina',
+          'frequencia.pagina',
           'instrumento.pagina',
           'musica.pagina',
           'local.pagina',
@@ -155,6 +157,12 @@ export default function HomePage() {
               <Link href="/musicos" className={dash.accessCard}>
                 <Music size={32} className={dash.accessCardIcon} strokeWidth={1.5} />
                 Músicos
+              </Link>
+            </PermissionGate>
+            <PermissionGate permission="frequencia.pagina">
+              <Link href="/frequencias" className={dash.accessCard}>
+                <ClipboardCheck size={32} className={dash.accessCardIcon} strokeWidth={1.5} />
+                Frequência
               </Link>
             </PermissionGate>
             <PermissionGate permission="instrumento.pagina">

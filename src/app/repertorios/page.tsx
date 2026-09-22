@@ -37,26 +37,45 @@ const MOMENTOS_PROMPT = [
   'ENTRADA',
   'ATO_PENITENCIAL',
   'GLORIA',
+  'SALMO',
   'ACLAMACAO',
+  'PRECES',
   'OFERTORIO',
   'SANTO',
+  'ORACAO_EUCAISTICA',
+  'ELEVACAO',
+  'AMEM',
+  'CORDEIRO',
   'COMUNHAO',
+  'POS_COMUNHAO',
   'FINAL',
+  'ADORACAO',
+  'MARIANA',
+  'ESPIRITO_SANTO',
+  'LOUVOR',
 ] as const;
 
 const MOMENTOS_FALLBACK: CategoriaLiturgica[] = [
   { codigo: 'ENTRADA', rotulo: 'Entrada' },
   { codigo: 'ATO_PENITENCIAL', rotulo: 'Ato Penitencial' },
   { codigo: 'GLORIA', rotulo: 'Glória' },
-  { codigo: 'SALMO', rotulo: 'Salmo' },
-  { codigo: 'ACLAMACAO', rotulo: 'Aclamação' },
-  { codigo: 'OFERTORIO', rotulo: 'Ofertório' },
+  { codigo: 'SALMO', rotulo: 'Salmo Responsorial' },
+  { codigo: 'ACLAMACAO', rotulo: 'Aclamação ao Evangelho' },
+  { codigo: 'PRECES', rotulo: 'Preces' },
+  { codigo: 'OFERTORIO', rotulo: 'Apresentação das Oferendas' },
   { codigo: 'SANTO', rotulo: 'Santo' },
-  { codigo: 'CORDEIRO', rotulo: 'Cordeiro' },
+  { codigo: 'ORACAO_EUCAISTICA', rotulo: 'Oração Eucarística' },
+  { codigo: 'ELEVACAO', rotulo: 'Elevação' },
+  { codigo: 'AMEM', rotulo: 'Amém' },
+  { codigo: 'CORDEIRO', rotulo: 'Cordeiro de Deus' },
   { codigo: 'COMUNHAO', rotulo: 'Comunhão' },
-  { codigo: 'POS_COMUNHAO', rotulo: 'Pós-comunhão' },
+  { codigo: 'POS_COMUNHAO', rotulo: 'Pós-Comunhão / Ação de Graças' },
   { codigo: 'FINAL', rotulo: 'Final' },
-  { codigo: 'OUTRO', rotulo: 'Outro' },
+  { codigo: 'ADORACAO', rotulo: 'Adoração' },
+  { codigo: 'MARIANA', rotulo: 'Mariana' },
+  { codigo: 'ESPIRITO_SANTO', rotulo: 'Espírito Santo' },
+  { codigo: 'LOUVOR', rotulo: 'Louvor' },
+  { codigo: 'OUTROS', rotulo: 'Outros' },
 ];
 
 type LinhaRepertorio = {
@@ -92,6 +111,8 @@ function novaId(): string {
 }
 
 function rotuloFallback(codigo: string): string {
+  if (codigo === 'COMUNHAO_01' || codigo === 'COMUNHAO_02' || codigo === 'COMUNHAO') return 'Comunhão';
+  if (codigo === 'OUTRO') return 'Outros';
   return MOMENTOS_FALLBACK.find((m) => m.codigo === codigo)?.rotulo ?? codigo.replace(/_/g, ' ');
 }
 
@@ -247,7 +268,7 @@ function RepertoriosPageInner() {
     setBuscando(true);
     musicasService
       .listar({
-        titulo: termoDebounced || undefined,
+        termo: termoDebounced || undefined,
         page: 0,
         size: 8,
         sort: 'titulo',
@@ -467,13 +488,13 @@ function RepertoriosPageInner() {
                       </button>
                     </PermissionGate>
                     <PermissionGate permission="repertorio.excluir">
-                      {item.repertorioCodigo && !publicada && (item.quantidadeItens ?? 0) > 0 && (
+                      {item.repertorioCodigo && !publicada && (
                         <button
                           type="button"
-                          className={listagemStyles.btnAcaoExtra}
+                          className={listagemStyles.btnExcluir}
                           onClick={() => setExcluirAlvo(item)}
                         >
-                          Limpar repertório
+                          Excluir
                         </button>
                       )}
                     </PermissionGate>
@@ -585,10 +606,11 @@ function RepertoriosPageInner() {
                             <div className={styles.buscaBox}>
                               <input
                                 className={styles.input}
-                                placeholder="Pesquisar música"
+                                placeholder="Título, trecho da letra, autor ou intérprete"
                                 value={termoBusca}
                                 onChange={(e) => setTermoBusca(e.target.value)}
                                 autoFocus
+                                aria-label="Pesquisar música por título, letra, autor ou intérprete"
                               />
                               {buscando && <p className={styles.vazioBusca}>Buscando...</p>}
                               {!buscando && resultados.length === 0 && (
@@ -603,7 +625,13 @@ function RepertoriosPageInner() {
                                 >
                                   <span className={styles.resultadoTitulo}>{musica.titulo}</span>
                                   <span className={styles.resultadoMeta}>
-                                    {[musica.autor, musica.tomPadrao ? `Tom ${musica.tomPadrao}` : null]
+                                    {[
+                                      musica.autor,
+                                      musica.interpreteReferencia
+                                        ? `Intérprete: ${musica.interpreteReferencia}`
+                                        : null,
+                                      musica.tomPadrao ? `Tom ${musica.tomPadrao}` : null,
+                                    ]
                                       .filter(Boolean)
                                       .join(' • ')}
                                   </span>
@@ -647,9 +675,9 @@ function RepertoriosPageInner() {
 
       <ConfirmModal
         open={Boolean(excluirAlvo)}
-        title="Limpar repertório"
-        message="As músicas serão desativadas e o histórico do repertório será preservado. Continuar?"
-        confirmLabel="Limpar"
+        title="Excluir repertório"
+        message="O repertório desta celebração será excluído. Depois você poderá montar um novo. Continuar?"
+        confirmLabel="Excluir"
         variant="danger"
         confirmLoading={excluindo}
         onCancel={() => setExcluirAlvo(null)}

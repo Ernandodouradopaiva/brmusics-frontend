@@ -1,8 +1,8 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Eye, Pencil } from 'lucide-react';
+import { ChevronDown, ChevronRight, Eye, Pencil } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { PermissionGate } from '@/components/PermissionGate';
 import { AppMessages, notifyApiError, notifyError, notifySuccess } from '@/lib/notify';
@@ -14,7 +14,6 @@ import {
   ListagemBar,
   ListagemPanel,
   ListagemPageWrapper,
-  ListagemPagination,
   ListagemSwitch,
 } from '@/components/listagem';
 import { StatusAtivoChip } from '@/components/StatusAtivoChip';
@@ -25,20 +24,29 @@ import listagemStyles from '@/components/listagem/listagem.module.css';
 import musicoStyles from '@/app/musicos/musicos.module.css';
 import styles from './musicas.module.css';
 
-const DEFAULT_PAGE_SIZE = 5;
+const LISTAGEM_SIZE = 1000;
+const CATEGORIA_SEM = '__SEM_CATEGORIA__';
 const CATEGORIAS_FALLBACK: CategoriaLiturgica[] = [
   { codigo: 'ENTRADA', rotulo: 'Entrada' },
-  { codigo: 'ATO_PENITENCIAL', rotulo: 'Ato penitencial' },
+  { codigo: 'ATO_PENITENCIAL', rotulo: 'Ato Penitencial' },
   { codigo: 'GLORIA', rotulo: 'Glória' },
-  { codigo: 'SALMO', rotulo: 'Salmo' },
-  { codigo: 'ACLAMACAO', rotulo: 'Aclamação' },
-  { codigo: 'OFERTORIO', rotulo: 'Ofertório' },
+  { codigo: 'SALMO', rotulo: 'Salmo Responsorial' },
+  { codigo: 'ACLAMACAO', rotulo: 'Aclamação ao Evangelho' },
+  { codigo: 'PRECES', rotulo: 'Preces' },
+  { codigo: 'OFERTORIO', rotulo: 'Apresentação das Oferendas' },
   { codigo: 'SANTO', rotulo: 'Santo' },
-  { codigo: 'CORDEIRO', rotulo: 'Cordeiro' },
+  { codigo: 'ORACAO_EUCAISTICA', rotulo: 'Oração Eucarística' },
+  { codigo: 'ELEVACAO', rotulo: 'Elevação' },
+  { codigo: 'AMEM', rotulo: 'Amém' },
+  { codigo: 'CORDEIRO', rotulo: 'Cordeiro de Deus' },
   { codigo: 'COMUNHAO', rotulo: 'Comunhão' },
-  { codigo: 'POS_COMUNHAO', rotulo: 'Pós-comunhão' },
+  { codigo: 'POS_COMUNHAO', rotulo: 'Pós-Comunhão / Ação de Graças' },
   { codigo: 'FINAL', rotulo: 'Final' },
-  { codigo: 'OUTRO', rotulo: 'Outro' },
+  { codigo: 'ADORACAO', rotulo: 'Adoração' },
+  { codigo: 'MARIANA', rotulo: 'Mariana' },
+  { codigo: 'ESPIRITO_SANTO', rotulo: 'Espírito Santo' },
+  { codigo: 'LOUVOR', rotulo: 'Louvor' },
+  { codigo: 'OUTROS', rotulo: 'Outros' },
 ];
 
 const FORM_INICIAL: MusicaInput = {
@@ -53,6 +61,33 @@ const FORM_INICIAL: MusicaInput = {
   observacao: '',
   ativo: true,
 };
+
+function ehLinkHttp(valor?: string | null): boolean {
+  if (!valor) return false;
+  const lower = valor.trim().toLowerCase();
+  return lower.startsWith('http://') || lower.startsWith('https://');
+}
+
+function validarLinkOpcional(valor: string | null | undefined, mensagem: string): boolean {
+  if (!valor?.trim()) return true;
+  if (ehLinkHttp(valor)) return true;
+  notifyError(mensagem);
+  return false;
+}
+
+function LinkCampo({ valor }: { valor?: string | null }) {
+  if (!valor) {
+    return <span>—</span>;
+  }
+  if (ehLinkHttp(valor)) {
+    return (
+      <a href={valor} target="_blank" rel="noreferrer">
+        {valor}
+      </a>
+    );
+  }
+  return <pre className={styles.blocoTexto}>{valor}</pre>;
+}
 
 type ModalMode = 'criar' | 'editar' | 'visualizar';
 
@@ -70,9 +105,6 @@ export default function MusicasPage() {
   const [autorDebounced, setAutorDebounced] = useState('');
   const [categoria, setCategoria] = useState('');
   const [filtroAtivo, setFiltroAtivo] = useState<'' | 'true' | 'false'>('');
-  const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
-  const [totalPages, setTotalPages] = useState(0);
   const [totalElements, setTotalElements] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<ModalMode>('criar');
@@ -84,12 +116,13 @@ export default function MusicasPage() {
   const [atualizandoAtivo, setAtualizandoAtivo] = useState<string | null>(null);
   const [excluirAlvo, setExcluirAlvo] = useState<Musica | null>(null);
   const [excluindo, setExcluindo] = useState(false);
+  const [recolhidos, setRecolhidos] = useState<Set<string>>(new Set());
+  const [exportandoCsv, setExportandoCsv] = useState(false);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
       setTituloDebounced(titulo);
       setAutorDebounced(autor);
-      setPage(0);
     }, 300);
     return () => window.clearTimeout(timer);
   }, [titulo, autor]);
@@ -112,22 +145,21 @@ export default function MusicasPage() {
         autor: autorDebounced,
         categoria: categoria || undefined,
         ativo: filtroAtivo === '' ? undefined : filtroAtivo === 'true',
-        page,
-        size: pageSize,
+        page: 0,
+        size: LISTAGEM_SIZE,
+        sort: 'titulo',
       })
       .then((res) => {
         setLista(res.data.content ?? []);
-        setTotalPages(res.data.totalPages ?? 0);
         setTotalElements(res.data.totalElements ?? 0);
       })
       .catch((err) => {
         setLista([]);
-        setTotalPages(0);
         setTotalElements(0);
         notifyApiError(err, { toastId: 'musicas-erro-lista' });
       })
       .finally(() => setLoading(false));
-  }, [podeListar, tituloDebounced, autorDebounced, categoria, filtroAtivo, page, pageSize]);
+  }, [podeListar, tituloDebounced, autorDebounced, categoria, filtroAtivo]);
 
   useEffect(() => {
     if (authLoading) return;
@@ -139,12 +171,99 @@ export default function MusicasPage() {
     loadData();
   }, [authLoading, podeListar, loadData]);
 
+  const grupos = useMemo(() => {
+    const porCodigo = new Map<string, Musica[]>();
+    for (const musica of lista) {
+      const codigo = musica.categoriaLiturgica || CATEGORIA_SEM;
+      const atuais = porCodigo.get(codigo) ?? [];
+      atuais.push(musica);
+      porCodigo.set(codigo, atuais);
+    }
+
+    const ordenados: { codigo: string; rotulo: string; itens: Musica[] }[] = [];
+    const vistos = new Set<string>();
+
+    for (const cat of categorias) {
+      if (categoria && cat.codigo !== categoria) continue;
+      const itens = porCodigo.get(cat.codigo);
+      if (!itens?.length) continue;
+      ordenados.push({ codigo: cat.codigo, rotulo: cat.rotulo, itens });
+      vistos.add(cat.codigo);
+    }
+
+    for (const [codigo, itens] of porCodigo) {
+      if (vistos.has(codigo) || codigo === CATEGORIA_SEM) continue;
+      if (categoria && codigo !== categoria) continue;
+      ordenados.push({
+        codigo,
+        rotulo: itens[0]?.categoriaLiturgicaRotulo || codigo.replace(/_/g, ' '),
+        itens,
+      });
+    }
+
+    if (!categoria) {
+      const semCategoria = porCodigo.get(CATEGORIA_SEM);
+      if (semCategoria?.length) {
+        ordenados.push({ codigo: CATEGORIA_SEM, rotulo: 'Sem categoria', itens: semCategoria });
+      }
+    }
+
+    return ordenados;
+  }, [lista, categorias, categoria]);
+
+  const chaveGrupos = useMemo(() => grupos.map((g) => g.codigo).join('|'), [grupos]);
+
+  useEffect(() => {
+    if (!chaveGrupos) {
+      setRecolhidos(new Set());
+      return;
+    }
+    // Por padrão, categorias começam recolhidas para facilitar a navegação.
+    setRecolhidos(new Set(chaveGrupos.split('|')));
+  }, [chaveGrupos]);
+
+  const alternarGrupo = (codigo: string) => {
+    setRecolhidos((atual) => {
+      const proximo = new Set(atual);
+      if (proximo.has(codigo)) {
+        proximo.delete(codigo);
+      } else {
+        proximo.add(codigo);
+      }
+      return proximo;
+    });
+  };
+
+  const expandirTodas = () => setRecolhidos(new Set());
+  const recolherTodas = () => setRecolhidos(new Set(grupos.map((g) => g.codigo)));
+
   const abrirCadastro = () => {
     setModalMode('criar');
     setEditCodigo(null);
     setForm(FORM_INICIAL);
     setDetalhe(null);
     setModalOpen(true);
+  };
+
+  const exportarCsv = async () => {
+    if (exportandoCsv) return;
+    setExportandoCsv(true);
+    try {
+      const blob = await musicasService.exportarCsv();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'musicas.csv';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+      notifySuccess(AppMessages.musica.csvExportado);
+    } catch (err) {
+      notifyApiError(err, { toastId: 'musicas-erro-csv' });
+    } finally {
+      setExportandoCsv(false);
+    }
   };
 
   const carregar = async (item: Musica, mode: ModalMode) => {
@@ -204,12 +323,14 @@ export default function MusicasPage() {
       notifyError(AppMessages.validacao.campoObrigatorio('o título'));
       return;
     }
-    if (form.linkReferencia?.trim()) {
-      const link = form.linkReferencia.trim().toLowerCase();
-      if (!link.startsWith('http://') && !link.startsWith('https://')) {
-        notifyError('O link de referência deve começar com http:// ou https://.');
-        return;
-      }
+    if (!validarLinkOpcional(form.linkReferencia, 'O link de referência deve começar com http:// ou https://.')) {
+      return;
+    }
+    if (!validarLinkOpcional(form.letra, 'O link da letra deve começar com http:// ou https://.')) {
+      return;
+    }
+    if (!validarLinkOpcional(form.cifra, 'O link da cifra deve começar com http:// ou https://.')) {
+      return;
     }
     setSalvando(true);
     try {
@@ -280,7 +401,6 @@ export default function MusicasPage() {
             setAutor('');
             setCategoria('');
             setFiltroAtivo('');
-            setPage(0);
           }}
         >
           <div className={listagemStyles.barFiltroComLabel}>
@@ -300,10 +420,7 @@ export default function MusicasPage() {
               id="filtro-categoria"
               className={listagemStyles.barSelect}
               value={categoria}
-              onChange={(e) => {
-                setCategoria(e.target.value);
-                setPage(0);
-              }}
+              onChange={(e) => setCategoria(e.target.value)}
             >
               <option value="">Todas</option>
               {categorias.map((c) => (
@@ -319,16 +436,23 @@ export default function MusicasPage() {
               id="filtro-ativo"
               className={listagemStyles.barSelect}
               value={filtroAtivo}
-              onChange={(e) => {
-                setFiltroAtivo(e.target.value as '' | 'true' | 'false');
-                setPage(0);
-              }}
+              onChange={(e) => setFiltroAtivo(e.target.value as '' | 'true' | 'false')}
             >
               <option value="">Todas</option>
               <option value="true">Ativas</option>
               <option value="false">Inativas</option>
             </select>
           </div>
+          <PermissionGate permission="musica.listar">
+            <button
+              type="button"
+              className={listagemStyles.btnLimpar}
+              onClick={exportarCsv}
+              disabled={exportandoCsv}
+            >
+              {exportandoCsv ? 'Exportando...' : 'Exportar CSV'}
+            </button>
+          </PermissionGate>
           <PermissionGate permission="musica.criar">
             <button type="button" className={listagemStyles.btnCadastrar} onClick={abrirCadastro}>
               Cadastrar
@@ -343,68 +467,145 @@ export default function MusicasPage() {
             {lista.length === 0 ? (
               <p className="emptyState">Nenhuma música encontrada para os filtros selecionados.</p>
             ) : (
-              <div className={styles.catalogo}>
-                {lista.map((m) => (
-                  <article key={m.codigo} className={`${styles.card} ${m.ativo === false ? styles.cardInativa : ''}`}>
-                    <div className={styles.cardHeader}>
-                      <h3 className={styles.titulo}>{m.titulo}</h3>
-                      <PermissionGate permission="musica.editar" fallback={<StatusAtivoChip ativo={Boolean(m.ativo)} />}>
-                        <ListagemSwitch
-                          checked={Boolean(m.ativo)}
-                          disabled={atualizandoAtivo === m.codigo}
-                          aria-label={m.ativo ? 'Inativar música' : 'Ativar música'}
-                          onChange={(checked) => void alterarAtivo(m, checked)}
-                        />
-                      </PermissionGate>
-                    </div>
-                    <p className={styles.autor}>{m.autor || 'Autor não informado'}</p>
-                    <div className={styles.metaRow}>
-                      <span className={styles.chip}>{rotuloCategoria(m)}</span>
-                      {m.tomPadrao ? <span className={`${styles.chip} ${styles.chipTom}`}>Tom {m.tomPadrao}</span> : null}
-                    </div>
-                    <div className={styles.acoes}>
-                      <PermissionGate permission="musica.visualizar">
+              <>
+                <div className={styles.resumoBar}>
+                  <p className={styles.resumoLista}>
+                    {totalElements === 1
+                      ? '1 música'
+                      : `${Math.min(lista.length, totalElements)} músicas`}
+                    {totalElements > lista.length
+                      ? ` (exibindo as primeiras ${lista.length} de ${totalElements})`
+                      : ''}
+                    {' · '}
+                    {grupos.length === 1 ? '1 categoria' : `${grupos.length} categorias`}
+                  </p>
+                  <div className={styles.resumoAcoes}>
+                    <button type="button" className={styles.btnResumo} onClick={expandirTodas}>
+                      Expandir todas
+                    </button>
+                    <button type="button" className={styles.btnResumo} onClick={recolherTodas}>
+                      Recolher todas
+                    </button>
+                  </div>
+                </div>
+                <div className={styles.grupos}>
+                  {grupos.map((grupo) => {
+                    const recolhido = recolhidos.has(grupo.codigo);
+                    return (
+                      <section key={grupo.codigo} className={styles.grupo}>
                         <button
                           type="button"
-                          className={listagemStyles.btnAcaoExtra}
-                          onClick={() => void carregar(m, 'visualizar')}
+                          className={styles.grupoHeader}
+                          onClick={() => alternarGrupo(grupo.codigo)}
+                          aria-expanded={!recolhido}
+                          aria-controls={`grupo-musicas-${grupo.codigo}`}
                         >
-                          <Eye size={14} />
-                          Visualizar
+                          <span className={styles.grupoTituloWrap}>
+                            {recolhido ? <ChevronRight size={18} aria-hidden /> : <ChevronDown size={18} aria-hidden />}
+                            <h2 className={styles.grupoTitulo}>{grupo.rotulo}</h2>
+                          </span>
+                          <span className={styles.grupoContagem}>
+                            {grupo.itens.length === 1 ? '1 música' : `${grupo.itens.length} músicas`}
+                          </span>
                         </button>
-                      </PermissionGate>
-                      <PermissionGate permission="musica.editar">
-                        <button
-                          type="button"
-                          className={listagemStyles.btnEditar}
-                          onClick={() => void carregar(m, 'editar')}
-                        >
-                          <Pencil size={14} />
-                          Editar
-                        </button>
-                      </PermissionGate>
-                      <PermissionGate permission="musica.excluir">
-                        <button type="button" className={listagemStyles.btnExcluir} onClick={() => setExcluirAlvo(m)}>
-                          Excluir
-                        </button>
-                      </PermissionGate>
-                    </div>
-                  </article>
-                ))}
-              </div>
+                        {!recolhido && (
+                          <div id={`grupo-musicas-${grupo.codigo}`} className={styles.catalogo}>
+                            {grupo.itens.map((m) => (
+                              <article
+                                key={m.codigo}
+                                className={`${styles.card} ${m.ativo === false ? styles.cardInativa : ''}`}
+                              >
+                                <div className={styles.cardHeader}>
+                                  <h3 className={styles.titulo}>{m.titulo}</h3>
+                                  <PermissionGate
+                                    permission="musica.editar"
+                                    fallback={<StatusAtivoChip ativo={Boolean(m.ativo)} />}
+                                  >
+                                    <ListagemSwitch
+                                      checked={Boolean(m.ativo)}
+                                      disabled={atualizandoAtivo === m.codigo}
+                                      aria-label={m.ativo ? 'Inativar música' : 'Ativar música'}
+                                      onChange={(checked) => void alterarAtivo(m, checked)}
+                                    />
+                                  </PermissionGate>
+                                </div>
+                                <p className={styles.autor}>{m.autor || 'Autor não informado'}</p>
+                                {m.tomPadrao ? (
+                                  <div className={styles.metaRow}>
+                                    <span className={`${styles.chip} ${styles.chipTom}`}>Tom {m.tomPadrao}</span>
+                                  </div>
+                                ) : null}
+                                <div className={styles.acoes}>
+                                  {ehLinkHttp(m.letra) && (
+                                    <a
+                                      className={styles.btnLink}
+                                      href={m.letra!.trim()}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                    >
+                                      Letra
+                                    </a>
+                                  )}
+                                  {ehLinkHttp(m.cifra) && (
+                                    <a
+                                      className={styles.btnLink}
+                                      href={m.cifra!.trim()}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                    >
+                                      Cifra
+                                    </a>
+                                  )}
+                                  {ehLinkHttp(m.linkReferencia) && (
+                                    <a
+                                      className={styles.btnLink}
+                                      href={m.linkReferencia!.trim()}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                    >
+                                      Youtube
+                                    </a>
+                                  )}
+                                  <PermissionGate permission="musica.visualizar">
+                                    <button
+                                      type="button"
+                                      className={listagemStyles.btnAcaoExtra}
+                                      onClick={() => void carregar(m, 'visualizar')}
+                                    >
+                                      <Eye size={14} />
+                                      Visualizar
+                                    </button>
+                                  </PermissionGate>
+                                  <PermissionGate permission="musica.editar">
+                                    <button
+                                      type="button"
+                                      className={listagemStyles.btnEditar}
+                                      onClick={() => void carregar(m, 'editar')}
+                                    >
+                                      <Pencil size={14} />
+                                      Editar
+                                    </button>
+                                  </PermissionGate>
+                                  <PermissionGate permission="musica.excluir">
+                                    <button
+                                      type="button"
+                                      className={listagemStyles.btnExcluir}
+                                      onClick={() => setExcluirAlvo(m)}
+                                    >
+                                      Excluir
+                                    </button>
+                                  </PermissionGate>
+                                </div>
+                              </article>
+                            ))}
+                          </div>
+                        )}
+                      </section>
+                    );
+                  })}
+                </div>
+              </>
             )}
-            <ListagemPagination
-              page={page}
-              totalPages={totalPages}
-              totalElements={totalElements}
-              size={pageSize}
-              resourceLabel="músicas"
-              onPageChange={setPage}
-              onSizeChange={(size) => {
-                setPageSize(size);
-                setPage(0);
-              }}
-            />
           </ListagemPanel>
         )}
       </ListagemPageWrapper>
@@ -441,38 +642,27 @@ export default function MusicasPage() {
                   <dd>{detalhe?.tomPadrao || '—'}</dd>
                 </div>
                 <div className={musicoStyles.detailItem}>
-                  <dt>Referência</dt>
+                  <dt>Link de referência</dt>
                   <dd>
-                    {detalhe?.linkReferencia ? (
-                      <a href={detalhe.linkReferencia} target="_blank" rel="noreferrer">
-                        {detalhe.linkReferencia}
-                      </a>
-                    ) : (
-                      '—'
-                    )}
+                    <LinkCampo valor={detalhe?.linkReferencia} />
                   </dd>
                 </div>
                 <div className={musicoStyles.detailItem}>
-                  <dt>Letra</dt>
+                  <dt>Link da letra</dt>
                   <dd>
-                    {detalhe?.letra ? <pre className={styles.blocoTexto}>{detalhe.letra}</pre> : '—'}
+                    <LinkCampo valor={detalhe?.letra} />
                   </dd>
                 </div>
                 <div className={musicoStyles.detailItem}>
-                  <dt>Cifra</dt>
+                  <dt>Link da cifra</dt>
                   <dd>
-                    {detalhe?.cifra ? (
-                      <pre className={`${styles.blocoTexto} ${styles.blocoCifra}`}>{detalhe.cifra}</pre>
-                    ) : (
-                      '—'
-                    )}
+                    <LinkCampo valor={detalhe?.cifra} />
                   </dd>
                 </div>
                 <div className={musicoStyles.detailItem}>
                   <dt>Observações</dt>
                   <dd>{detalhe?.observacao || '—'}</dd>
                 </div>
-                <p className={styles.anexoHint}>Anexos de cifra e áudio (MinIO) serão habilitados em uma próxima etapa.</p>
                 <div className="modalActions">
                   <button type="button" className="modalBtnSecondary" onClick={fecharModal}>
                     Fechar
@@ -580,13 +770,15 @@ export default function MusicasPage() {
                   </div>
                   <div className={musicoStyles.detailItem}>
                     <dt>
-                      <label htmlFor="musica-letra">Letra</label>
+                      <label htmlFor="musica-letra">Link da letra</label>
                     </dt>
                     <dd>
-                      <textarea
+                      <input
                         id="musica-letra"
                         className={styles.textarea}
+                        style={{ minHeight: 'unset' }}
                         data-no-uppercase
+                        placeholder="https://"
                         value={form.letra ?? ''}
                         onChange={(e) => setForm((f) => ({ ...f, letra: e.target.value }))}
                       />
@@ -594,13 +786,15 @@ export default function MusicasPage() {
                   </div>
                   <div className={musicoStyles.detailItem}>
                     <dt>
-                      <label htmlFor="musica-cifra">Cifra</label>
+                      <label htmlFor="musica-cifra">Link da cifra</label>
                     </dt>
                     <dd>
-                      <textarea
+                      <input
                         id="musica-cifra"
-                        className={`${styles.textarea} ${styles.textareaMono}`}
+                        className={styles.textarea}
+                        style={{ minHeight: 'unset' }}
                         data-no-uppercase
+                        placeholder="https://"
                         value={form.cifra ?? ''}
                         onChange={(e) => setForm((f) => ({ ...f, cifra: e.target.value }))}
                       />
@@ -622,7 +816,7 @@ export default function MusicasPage() {
                   </div>
                 </div>
                 <p className={styles.anexoHint}>
-                  Anexos (PDF de cifra, áudio) serão armazenados no MinIO em etapa posterior.
+                  Letra, cifra e referência devem ser URLs começando com http:// ou https://.
                 </p>
                 <div className="modalActions">
                   <button type="button" className="modalBtnSecondary" onClick={fecharModal} disabled={salvando}>

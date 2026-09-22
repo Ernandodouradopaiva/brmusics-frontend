@@ -58,7 +58,7 @@ export default function MinhaEscalaPage() {
       {agenda?.proxima ? (
         <CardProximaEscala item={agenda.proxima} />
       ) : (
-        <p className={styles.vazio}>Nenhuma escala futura publicada para você.</p>
+        <p className={styles.vazio}>Nenhuma escala futura cadastrada para você.</p>
       )}
       <p className={styles.secaoTitulo}>Próximas escalas</p>
       {(agenda?.proximas ?? []).length > 0 ? (

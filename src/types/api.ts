@@ -137,6 +137,7 @@ export interface LocalInput {
 }
 
 export type CelebracaoStatus = 'RASCUNHO' | 'PUBLICADA' | 'CANCELADA' | 'REALIZADA';
+export type CelebracaoTipo = 'FIXA' | 'EXTRAORDINARIA';
 
 export interface Celebracao {
   id: number;
@@ -150,6 +151,9 @@ export interface Celebracao {
   descricao?: string | null;
   observacao?: string | null;
   status: CelebracaoStatus;
+  tipo?: CelebracaoTipo | null;
+  serieCodigo?: string | null;
+  quantidadeGerada?: number | null;
 }
 
 export interface CelebracaoInput {
@@ -161,6 +165,7 @@ export interface CelebracaoInput {
   descricao?: string | null;
   observacao?: string | null;
   status?: CelebracaoStatus;
+  tipo?: CelebracaoTipo;
 }
 
 export type EscalaStatus = 'RASCUNHO' | 'PUBLICADA';
@@ -214,10 +219,12 @@ export interface EscalaMensalItem {
   localNome?: string | null;
   diaSemana?: string | null;
   celebracaoStatus: CelebracaoStatus;
+  celebracaoTipo?: CelebracaoTipo | null;
   escalaCodigo?: string | null;
   escalaStatus?: EscalaStatus | null;
   quantidadeMusicos: number;
   participacoes: EscalaMusico[];
+  repertorio?: RepertorioItem[];
   alertas: string[];
 }
 
@@ -235,6 +242,7 @@ export interface MinhaEscalaItem {
   horaFim?: string | null;
   diaSemana?: string | null;
   localNome?: string | null;
+  status?: EscalaStatus | string | null;
   minhaFuncao?: string | null;
   repertorioCodigo?: string | null;
   equipe: MinhaEscalaEquipeItem[];
@@ -409,6 +417,26 @@ export interface RepertorioMensalItem {
   observacao?: string | null;
   quantidadeItens: number;
   itens: RepertorioItem[];
+}
+
+export type FrequenciaStatus = 'PRESENTE' | 'FALTOU' | 'DISPENSADO' | 'NAO_MINISTERIO';
+
+export interface FrequenciaMensalItem {
+  codigo?: string | null;
+  musicoCodigo: string;
+  musicoNome: string;
+  musicoAtivo?: boolean | null;
+  semana1?: FrequenciaStatus | null;
+  semana2?: FrequenciaStatus | null;
+  semana3?: FrequenciaStatus | null;
+  semana4?: FrequenciaStatus | null;
+}
+
+export interface FrequenciaMensalPrevia {
+  ano: number;
+  mes: number;
+  competencia: string;
+  itens: FrequenciaMensalItem[];
 }
 
 export type WhatsAppTipoMensagem =

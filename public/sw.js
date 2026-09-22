@@ -1,5 +1,5 @@
 /* BRMusics PWA — cacheia somente estáticos. APIs autenticadas passam direto na rede. */
-const CACHE_VERSION = 'brmusics-static-v1';
+const CACHE_VERSION = 'brmusics-static-v3';
 const OFFLINE_URL = '/offline.html';
 
 const PRECACHE = [
@@ -39,6 +39,7 @@ function ehEstaticoCacheavel(url) {
 }
 
 self.addEventListener('install', (event) => {
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_VERSION).then((cache) => cache.addAll(PRECACHE)).catch(() => undefined),
   );

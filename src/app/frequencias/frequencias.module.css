@@ -1,0 +1,154 @@
+.intro {
+  margin: 0 0.75rem 1rem;
+  color: #64748b;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.navMes {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin: 0 0.75rem 1rem;
+}
+
+.navBtn {
+  appearance: none;
+  border: 1px solid #d0d0d0;
+  background: #fff;
+  color: #1e293b;
+  border-radius: 999px;
+  min-height: 2.5rem;
+  padding: 0.35rem 0.85rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex: 1 1 0;
+  justify-content: center;
+}
+
+.navBtn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.mesAtual {
+  flex: 1.4 1 0;
+  text-align: center;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #1e293b;
+  margin: 0;
+}
+
+.barraAcoes {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0 0.75rem 1rem;
+  flex-wrap: wrap;
+}
+
+.btnSalvar {
+  appearance: none;
+  border: 0;
+  border-radius: 12px;
+  min-height: 2.6rem;
+  padding: 0.45rem 1.1rem;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.8125rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.btnSalvar:disabled {
+  opacity: 0.55;
+}
+
+.avisoDirty {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #b45309;
+}
+
+.tableWrap {
+  margin: 0 0.75rem 1.5rem;
+  overflow-x: auto;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  background: #fff;
+}
+
+.tabela {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 720px;
+}
+
+.tabela th,
+.tabela td {
+  padding: 0.7rem 0.75rem;
+  border-bottom: 1px solid #f1f5f9;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.tabela th {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: #faf6f0;
+}
+
+.tabela tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.nome {
+  font-weight: 700;
+  color: #1e293b;
+  white-space: nowrap;
+}
+
+.select {
+  width: 100%;
+  min-width: 9.5rem;
+  min-height: 2.35rem;
+  border: 1px solid #d0d0d0;
+  border-radius: 10px;
+  padding: 0.35rem 0.55rem;
+  background: #fff;
+  color: #1e293b;
+  font-size: 0.8125rem;
+}
+
+.select:focus {
+  outline: 2px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  border-color: var(--accent);
+}
+
+.select:disabled {
+  background: #f8fafc;
+  color: #64748b;
+}
+
+@media (max-width: 720px) {
+  .navMes {
+    flex-direction: column;
+  }
+
+  .navBtn,
+  .mesAtual {
+    width: 100%;
+    flex: none;
+  }
+}

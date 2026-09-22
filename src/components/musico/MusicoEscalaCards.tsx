@@ -10,15 +10,24 @@ function metaCelebracao(item: MinhaEscalaItem): string {
   return partes.join(' • ');
 }
 
+function rotuloStatus(status?: string | null): string | null {
+  if (!status) return null;
+  if (status === 'PUBLICADA') return 'Publicada';
+  if (status === 'RASCUNHO') return 'Em montagem';
+  return status;
+}
+
 export function CardProximaEscala({ item }: { item: MinhaEscalaItem }) {
   const hrefRepertorio = item.repertorioCodigo
     ? `/meu-repertorio/${item.repertorioCodigo}`
     : `/meu-repertorio/celebracao/${item.celebracaoCodigo}`;
+  const status = rotuloStatus(item.status);
   return (
     <article className={styles.cardDestaque}>
       <p className={styles.cardData}>{formatarDataIso(item.data)}</p>
       <p className={styles.cardMeta}>{metaCelebracao(item)}</p>
       <h3 className={styles.cardTitulo}>{item.titulo}</h3>
+      {status ? <p className={styles.badgeStatus}>{status}</p> : null}
       <p className={styles.rotulo}>Função</p>
       <p className={styles.valor}>{item.minhaFuncao || '—'}</p>
       <p className={styles.rotulo}>Equipe</p>
@@ -38,6 +47,7 @@ export function CardProximaEscala({ item }: { item: MinhaEscalaItem }) {
 }
 
 export function CardEscalaResumo({ item }: { item: MinhaEscalaItem }) {
+  const status = rotuloStatus(item.status);
   return (
     <Link href={`/minha-escala/${item.escalaCodigo}`} className={styles.cardLista}>
       <p className={styles.cardListaTitulo}>{item.titulo}</p>
@@ -46,6 +56,7 @@ export function CardEscalaResumo({ item }: { item: MinhaEscalaItem }) {
         {item.diaSemana ? ` • ${item.diaSemana}` : ''}
         {item.horaInicio ? ` • ${formatarHoraAmigavel(item.horaInicio)}` : ''}
         {item.minhaFuncao ? ` • ${item.minhaFuncao}` : ''}
+        {status ? ` • ${status}` : ''}
       </p>
     </Link>
   );

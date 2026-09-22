@@ -2,14 +2,14 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Eye, Pencil } from 'lucide-react';
+import { Copy, Eye, Pencil } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { PermissionGate } from '@/components/PermissionGate';
 import { AppMessages, notifyApiError, notifyError, notifySuccess } from '@/lib/notify';
 import { podeListarCelebracoes } from '@/lib/permissions';
 import { celebracoesService } from '@/services/celebracoes';
 import { locaisService } from '@/services/locais';
-import type { Celebracao, CelebracaoInput, CelebracaoStatus, Local } from '@/types/api';
+import type { Celebracao, CelebracaoInput, CelebracaoStatus, CelebracaoTipo, Local } from '@/types/api';
 import {
   ListagemTitulo,
   ListagemBar,
@@ -52,6 +52,10 @@ const STATUS_OPCOES: { value: CelebracaoStatus; label: string }[] = [
   { value: 'PUBLICADA', label: 'Publicada' },
   { value: 'CANCELADA', label: 'Cancelada' },
   { value: 'REALIZADA', label: 'Realizada' },
+];
+const TIPO_OPCOES: { value: CelebracaoTipo; label: string }[] = [
+  { value: 'EXTRAORDINARIA', label: 'Extraordinária (data única)' },
+  { value: 'FIXA', label: 'Fixa (mesmo dia da semana no mês)' },
 ];
 
 type ModalMode = 'criar' | 'editar' | 'visualizar';
@@ -106,6 +110,11 @@ function labelDestaque(d: Destaque): string {
   return 'Rascunho / outras';
 }
 
+function labelTipo(tipo?: CelebracaoTipo | null): string {
+  if (tipo === 'FIXA') return 'Fixa';
+  return 'Extraordinária';
+}
+
 const FORM_INICIAL: CelebracaoInput = {
   localCodigo: '',
   titulo: '',
@@ -115,6 +124,7 @@ const FORM_INICIAL: CelebracaoInput = {
   descricao: '',
   observacao: '',
   status: 'RASCUNHO',
+  tipo: 'EXTRAORDINARIA',
 };
 
 export default function CelebracoesPage() {
@@ -144,6 +154,12 @@ export default function CelebracoesPage() {
   const [salvando, setSalvando] = useState(false);
   const [excluirAlvo, setExcluirAlvo] = useState<Celebracao | null>(null);
   const [excluindo, setExcluindo] = useState(false);
+  const [replicarAlvo, setReplicarAlvo] = useState<Celebracao | null>(null);
+  const [replicarMes, setReplicarMes] = useState<number>(hoje.getMonth() + 1 === 12 ? 1 : hoje.getMonth() + 2);
+  const [replicarAno, setReplicarAno] = useState<number>(
+    hoje.getMonth() + 1 === 12 ? hoje.getFullYear() + 1 : hoje.getFullYear(),
+  );
+  const [replicando, setReplicando] = useState(false);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -165,7 +181,6 @@ export default function CelebracoesPage() {
         status: status || undefined,
         page,
         size: pageSize,
-        sort: 'data,desc',
       })
       .then((res) => {
         setLista(res.data.content ?? []);
@@ -222,6 +237,7 @@ export default function CelebracoesPage() {
         descricao: c.descricao ?? '',
         observacao: c.observacao ?? '',
         status: c.status ?? 'RASCUNHO',
+        tipo: c.tipo ?? 'EXTRAORDINARIA',
       });
     } catch (err) {
       notifyApiError(err);
@@ -256,13 +272,22 @@ export default function CelebracoesPage() {
         descricao: form.descricao?.trim() || null,
         observacao: form.observacao?.trim() || null,
         status: form.status ?? 'RASCUNHO',
+        tipo: form.tipo ?? 'EXTRAORDINARIA',
       };
       if (modalMode === 'editar' && editCodigo) {
         await celebracoesService.atualizar(editCodigo, body);
+        notifySuccess(AppMessages.celebracao.salvo(true));
       } else {
-        await celebracoesService.criar(body);
+        const res = await celebracoesService.criar(body);
+        const qtd = res.data.quantidadeGerada ?? 1;
+        if (body.tipo === 'FIXA' && qtd > 1) {
+          const [, mesRef] = body.data.split('-').map(Number);
+          const competencia = `${MESES[(mesRef ?? 1) - 1]}/${body.data.slice(0, 4)}`;
+          notifySuccess(AppMessages.celebracao.serieGerada(qtd, competencia));
+        } else {
+          notifySuccess(AppMessages.celebracao.salvo(false));
+        }
       }
-      notifySuccess(AppMessages.celebracao.salvo(modalMode === 'editar'));
       fecharModal();
       loadData();
     } catch (err) {
@@ -430,9 +455,14 @@ export default function CelebracoesPage() {
                   const d = classificar(c);
                   return (
                     <article key={c.codigo} className={cardClass(d)}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', gap: '0.5rem' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', gap: '0.5rem', flexWrap: 'wrap' }}>
                         <h3 className={styles.titulo}>{c.titulo}</h3>
-                        <span className={badgeClass(d)}>{d === 'futura' ? 'Futura' : labelDestaque(d)}</span>
+                        <div style={{ display: 'flex', gap: '0.35rem', flexWrap: 'wrap' }}>
+                          <span className={c.tipo === 'FIXA' ? `${styles.badge} ${styles.badgeFixa}` : `${styles.badge} ${styles.badgeExtra}`}>
+                            {labelTipo(c.tipo)}
+                          </span>
+                          <span className={badgeClass(d)}>{d === 'futura' ? 'Futura' : labelDestaque(d)}</span>
+                        </div>
                       </div>
                       <p className={styles.meta}>
                         {formatarData(c.data)} · {horaInput(c.horaInicio)}
@@ -461,6 +491,25 @@ export default function CelebracoesPage() {
                             Editar
                           </button>
                         </PermissionGate>
+                        {c.tipo === 'FIXA' && (
+                          <PermissionGate permission="celebracao.criar">
+                            <button
+                              type="button"
+                              className={listagemStyles.btnAcaoExtra}
+                              onClick={() => {
+                                const proximo = hoje.getMonth() + 1 === 12 ? 1 : hoje.getMonth() + 2;
+                                const proximoAno =
+                                  hoje.getMonth() + 1 === 12 ? hoje.getFullYear() + 1 : hoje.getFullYear();
+                                setReplicarMes(proximo);
+                                setReplicarAno(proximoAno);
+                                setReplicarAlvo(c);
+                              }}
+                            >
+                              <Copy size={14} />
+                              Replicar mês
+                            </button>
+                          </PermissionGate>
+                        )}
                         <PermissionGate permission="celebracao.excluir">
                           <button type="button" className={listagemStyles.btnExcluir} onClick={() => setExcluirAlvo(c)}>
                             Excluir
@@ -519,6 +568,10 @@ export default function CelebracoesPage() {
                   </dd>
                 </div>
                 <div className={musicoStyles.detailItem}>
+                  <dt>Tipo</dt>
+                  <dd>{labelTipo(form.tipo)}</dd>
+                </div>
+                <div className={musicoStyles.detailItem}>
                   <dt>Status</dt>
                   <dd>{form.status ? labelStatus(form.status) : '—'}</dd>
                 </div>
@@ -571,7 +624,35 @@ export default function CelebracoesPage() {
                   </select>
                 </div>
                 <div className="modalFormRow">
-                  <label htmlFor="celebracao-data">Data</label>
+                  <label htmlFor="celebracao-tipo">Tipo</label>
+                  <select
+                    id="celebracao-tipo"
+                    className={musicoStyles.select}
+                    value={form.tipo ?? 'EXTRAORDINARIA'}
+                    onChange={(e) =>
+                      setForm((f) => ({ ...f, tipo: e.target.value as CelebracaoTipo }))
+                    }
+                    disabled={modalMode === 'editar'}
+                    required
+                  >
+                    {TIPO_OPCOES.map((op) => (
+                      <option key={op.value} value={op.value}>
+                        {op.label}
+                      </option>
+                    ))}
+                  </select>
+                  {form.tipo === 'FIXA' && modalMode === 'criar' && (
+                    <p className={styles.ajudaTipo}>
+                      Será gerada uma celebração em todos os dias da semana iguais ao da data
+                      informada, no mesmo mês (ex.: todos os sábados de setembro/2026 às 18h).
+                      Depois use &quot;Replicar mês&quot; para gerar outros meses.
+                    </p>
+                  )}
+                </div>
+                <div className="modalFormRow">
+                  <label htmlFor="celebracao-data">
+                    {form.tipo === 'FIXA' && modalMode === 'criar' ? 'Data de referência' : 'Data'}
+                  </label>
                   <input
                     id="celebracao-data"
                     type="date"
@@ -668,6 +749,91 @@ export default function CelebracoesPage() {
         }}
         onCancel={() => setExcluirAlvo(null)}
       />
+
+      {replicarAlvo && (
+        <div className="modalOverlay" role="dialog" aria-modal="true">
+          <div className="modalContent" onClick={(e) => e.stopPropagation()}>
+            <ModalCloseButton onClose={() => !replicando && setReplicarAlvo(null)} disabled={replicando} />
+            <h2 style={{ margin: '0 0 0.5rem', fontSize: '1.25rem', fontWeight: 600, paddingRight: '2.5rem' }}>
+              Replicar mês
+            </h2>
+            <p className={styles.ajudaTipo} style={{ marginBottom: '1rem' }}>
+              Gera todas as ocorrências do mesmo dia da semana e horário de{' '}
+              <strong>{replicarAlvo.titulo}</strong> ({formatarData(replicarAlvo.data)} ·{' '}
+              {horaInput(replicarAlvo.horaInicio)}) no mês escolhido. Datas já existentes no mesmo
+              local/horário são ignoradas.
+            </p>
+            <div className="modalFormRow">
+              <label htmlFor="replicar-mes">Mês de destino</label>
+              <select
+                id="replicar-mes"
+                className={musicoStyles.select}
+                value={replicarMes}
+                onChange={(e) => setReplicarMes(Number(e.target.value))}
+                disabled={replicando}
+              >
+                {MESES.map((nomeMes, idx) => (
+                  <option key={nomeMes} value={idx + 1}>
+                    {nomeMes}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="modalFormRow">
+              <label htmlFor="replicar-ano">Ano de destino</label>
+              <select
+                id="replicar-ano"
+                className={musicoStyles.select}
+                value={replicarAno}
+                onChange={(e) => setReplicarAno(Number(e.target.value))}
+                disabled={replicando}
+              >
+                {anos.map((a) => (
+                  <option key={a} value={a}>
+                    {a}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="modalActions">
+              <button
+                type="button"
+                className="modalBtnSecondary"
+                onClick={() => setReplicarAlvo(null)}
+                disabled={replicando}
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                className="modalBtnPrimary"
+                disabled={replicando}
+                onClick={() => {
+                  if (!replicarAlvo) return;
+                  setReplicando(true);
+                  celebracoesService
+                    .replicarMes(replicarAlvo.codigo, replicarAno, replicarMes)
+                    .then((res) => {
+                      const qtd = res.data.quantidadeGerada ?? 1;
+                      notifySuccess(
+                        AppMessages.celebracao.mesReplicado(qtd, `${MESES[replicarMes - 1]}/${replicarAno}`),
+                      );
+                      setReplicarAlvo(null);
+                      setMes(replicarMes);
+                      setAno(replicarAno);
+                      setPage(0);
+                      loadData();
+                    })
+                    .catch((err) => notifyApiError(err))
+                    .finally(() => setReplicando(false));
+                }}
+              >
+                {replicando ? 'Replicando...' : 'Replicar'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

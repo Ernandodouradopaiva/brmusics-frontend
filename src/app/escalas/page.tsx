@@ -138,6 +138,8 @@ export default function EscalasPage() {
   const [previa, setPrevia] = useState<EscalaPublicacaoPrevia | null>(null);
   const [publicarOpen, setPublicarOpen] = useState(false);
   const [publicando, setPublicando] = useState(false);
+  const [publicarItem, setPublicarItem] = useState<EscalaMensalItem | null>(null);
+  const [publicandoItem, setPublicandoItem] = useState(false);
   const [comunicacao, setComunicacao] = useState<WhatsAppComunicacaoPrevia | null>(null);
   const [comunicando, setComunicando] = useState(false);
 
@@ -352,6 +354,35 @@ export default function EscalasPage() {
       .finally(() => setPublicando(false));
   };
 
+  const abrirPublicacaoIndividual = (item: EscalaMensalItem) => {
+    if (!item.escalaCodigo) {
+      notifyError('Monte e salve a escala antes de publicar.');
+      return;
+    }
+    if ((item.quantidadeMusicos ?? 0) <= 0) {
+      notifyError('Inclua pelo menos um músico na escala antes de publicar.');
+      return;
+    }
+    setPublicarItem(item);
+  };
+
+  const confirmarPublicacaoIndividual = () => {
+    if (!publicarItem?.escalaCodigo || publicandoItem) return;
+    setPublicandoItem(true);
+    escalasService
+      .publicarUma(publicarItem.escalaCodigo)
+      .then(() => {
+        notifySuccess(AppMessages.escala.publicadaIndividual);
+        setPublicarItem(null);
+        if (modalOpen && itemAtual?.celebracaoCodigo === publicarItem.celebracaoCodigo) {
+          fecharModal();
+        }
+        loadData();
+      })
+      .catch((err) => notifyApiError(err))
+      .finally(() => setPublicandoItem(false));
+  };
+
   const comunicarAlteracoes = () => {
     if (comunicando || comunicacao?.jaComunicada) return;
     setComunicando(true);
@@ -450,7 +481,7 @@ export default function EscalasPage() {
                   onClick={comunicarAlteracoes}
                   disabled={comunicando}
                 >
-                  {comunicando ? 'Comunicando...' : 'Comunicar alterações'}
+                  {comunicando ? 'Comunicando...' : 'Reenviar alterações (WhatsApp)'}
                 </button>
               </PermissionGate>
             )}
@@ -486,6 +517,12 @@ export default function EscalasPage() {
                     <span className={`${styles.badge} ${publicada ? styles.badgePublicada : styles.badgeRascunho}`}>
                       {publicada ? 'Publicada' : 'Rascunho'}
                     </span>
+                    {item.celebracaoTipo === 'FIXA' && (
+                      <span className={`${styles.badge} ${styles.badgeFixa}`}>Fixa</span>
+                    )}
+                    {item.celebracaoTipo === 'EXTRAORDINARIA' && (
+                      <span className={`${styles.badge} ${styles.badgeExtra}`}>Extraordinária</span>
+                    )}
                     <h3 className={styles.titulo}>{item.titulo}</h3>
                     <p className={styles.meta}>
                       {item.diaSemana || '—'} • {horaInput(item.horaInicio)}
@@ -508,19 +545,48 @@ export default function EscalasPage() {
                       </ul>
                     )}
                   </div>
-                  {(item.alertas ?? []).length > 0 && (
-                    <p className={styles.alertas}>{item.alertas.join(' ')}</p>
-                  )}
+                  <div className={styles.repertorioCard}>
+                    <p className={styles.repertorioTitulo}>Repertório</p>
+                    {(item.repertorio ?? []).length > 0 ? (
+                      <ul className={styles.repertorioLista}>
+                        {item.repertorio!.map((r, indice) => (
+                          <li key={r.codigo ?? `${r.musicaCodigo}-${r.momentoLiturgico}-${indice}`}>
+                            <span className={styles.repertorioMomento}>
+                              {r.momentoLiturgicoRotulo || r.momentoLiturgico}
+                            </span>
+                            <span className={styles.repertorioMusica}>
+                              {r.musicaTitulo}
+                              {r.tom ? ` — Tom ${r.tom}` : ''}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className={styles.repertorioVazio}>Sem repertório montado.</p>
+                    )}
+                  </div>
                   <div className={styles.acoes}>
-                    <PermissionGate permission={item.escalaCodigo ? 'escala.editar' : 'escala.criar'}>
-                      <button
-                        type="button"
-                        className={listagemStyles.btnCadastrar}
-                        onClick={() => abrirEditor(item, false)}
-                      >
-                        {item.escalaCodigo ? 'Editar escala' : 'Montar escala'}
-                      </button>
-                    </PermissionGate>
+                    <div className={styles.acoesPrincipais}>
+                      {!publicada && !cancelada && (
+                        <button
+                          type="button"
+                          className={styles.btnPublicarCard}
+                          onClick={() => abrirPublicacaoIndividual(item)}
+                          disabled={publicandoItem}
+                        >
+                          Publicar
+                        </button>
+                      )}
+                      <PermissionGate permission={item.escalaCodigo ? 'escala.editar' : 'escala.criar'}>
+                        <button
+                          type="button"
+                          className={styles.btnEditarCard}
+                          onClick={() => abrirEditor(item, false)}
+                        >
+                          {item.escalaCodigo ? 'Editar' : 'Montar'}
+                        </button>
+                      </PermissionGate>
+                    </div>
                     <PermissionGate permission="escala.visualizar">
                       <button
                         type="button"
@@ -713,8 +779,21 @@ export default function EscalasPage() {
                         Copiar equipe
                       </button>
                     </PermissionGate>
+                    {itemAtual.escalaCodigo
+                      && itemAtual.escalaStatus !== 'PUBLICADA'
+                      && itemAtual.celebracaoStatus !== 'CANCELADA'
+                      && linhas.length > 0 && (
+                      <button
+                        type="button"
+                        className={styles.btnPublicarCard}
+                        disabled={salvando || publicandoItem}
+                        onClick={() => abrirPublicacaoIndividual(itemAtual)}
+                      >
+                        Publicar
+                      </button>
+                    )}
                     <button type="submit" className="modalBtnPrimary" disabled={salvando}>
-                      {salvando ? 'Salvando...' : 'Salvar escala'}
+                      {salvando ? 'Salvando...' : 'Salvar'}
                     </button>
                   </>
                 )}
@@ -771,7 +850,7 @@ export default function EscalasPage() {
         title={`Publicar escalas de ${previa?.competencia ?? ''}?`}
         message={
           previa?.versaoAtual
-            ? `Será gerada a versão ${previa.proximaVersao} (atual: versão ${previa.versaoAtual}). O WhatsApp não será enviado agora. Após publicar, use Comunicar alterações somente para os músicos afetados.`
+            ? `Será gerada a versão ${previa.proximaVersao} (atual: versão ${previa.versaoAtual}). Os músicos afetados pelas alterações serão notificados automaticamente por WhatsApp.`
             : 'A primeira versão será registrada. Os músicos serão notificados por WhatsApp.'
         }
         confirmLabel={publicando ? 'Publicando...' : 'Publicar'}
@@ -803,6 +882,20 @@ export default function EscalasPage() {
           </div>
         )}
       </ConfirmModal>
+
+      <ConfirmModal
+        open={Boolean(publicarItem)}
+        title="Publicar esta escala?"
+        message={
+          publicarItem
+            ? `A escala de ${publicarItem.titulo} (${diaDoIso(publicarItem.data)}/${mesCurto(publicarItem.data)}) será marcada como publicada. É necessário ter músicos e repertório cadastrados.`
+            : ''
+        }
+        confirmLabel={publicandoItem ? 'Publicando...' : 'Publicar'}
+        confirmLoading={publicandoItem}
+        onCancel={() => setPublicarItem(null)}
+        onConfirm={confirmarPublicacaoIndividual}
+      />
 
       <ConfirmModal
         open={Boolean(excluirAlvo)}
